@@ -1,0 +1,11 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<form method="POST" action="/books">
+    <input placeholder="Enter title" name="Book[title]"/>
+    <input placeholder="Paste image url" name="Book[image]"/>
+    <input placeholder="Author name" name="Book[author]"/>
+    <input placeholder="Description" name="Book[description]"/>
+    <input placeholder="Enter Year" name="Book[year]"/>
+    <input placeholder="Enter Price" name="Book[price]"/>
+    <button>Create Book</button>
+</form>

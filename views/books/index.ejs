@@ -1,0 +1,17 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container">
+    <div class="card">
+        <% for(let book of allBooks) { %>
+            <p> <b><%= book.title %></b></p>
+            <img src="<%= book.image %>" alt="<%= book.title %>">
+            <p><%= book.author %></p>
+            <p><%= book.description %></p>
+            <p><%= book.year %></p>
+            <p><%= book.price %></p>
+        <% } %>
+        <form method="GET" action="/books/new">
+            <button >Add new Book</button>
+        </form>
+    </div>
+</div>
