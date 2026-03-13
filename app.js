@@ -64,6 +64,13 @@ app.put("/books/:id" , async (req,res) => {
     res.redirect("/books");
 });
 
+//Delete Route
+app.delete("/books/:id" , async (req,res) => {
+    let {id} = req.params;
+    await Book.findByIdAndDelete(id);
+    res.redirect("/books");
+});
+
 app.listen(3000 , () => {
     console.log("Server is running on port 3000");
 });

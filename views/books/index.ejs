@@ -12,9 +12,12 @@
             <form action="/books/<%=book._id%>/edit" method="GET">
                 <button>Edit</button>
             </form>
+            <form method="POST" action="/books/<%=book._id%>?_method=DELETE">
+                <button >Delete</button>
+            </form>
         <% } %>
-        <form method="GET" action="/books/new">
-            <button >Add new Book</button>
-        </form>
+            <form method="GET" action="/books/new">
+                <button >Add new Book</button>
+            </form>
     </div>
 </div>
