@@ -9,6 +9,9 @@
             <p><%= book.description %></p>
             <p><%= book.year %></p>
             <p><%= book.price %></p>
+            <form action="/books/<%=book._id%>/edit" method="GET">
+                <button>Edit</button>
+            </form>
         <% } %>
         <form method="GET" action="/books/new">
             <button >Add new Book</button>

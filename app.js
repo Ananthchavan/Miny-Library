@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
 const ejsmate = require("ejs-mate");
+const methodOverride = require("method-override");
 
 const Book = require("./models/book.js");
 
@@ -26,6 +27,7 @@ app.set("view engine", "ejs");
 app.set("views" , path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"public")));
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 app.get("/" , (req,res) => {
     res.send("Working :)");
@@ -45,6 +47,20 @@ app.get("/books/new" , (req,res) => {
 app.post("/books", async (req,res) => {
     const newBook = new Book(req.body.Book);
     await newBook.save();
+    res.redirect("/books");
+});
+
+//Update Books
+
+app.get("/books/:id/edit" , async (req,res) =>{
+    let {id} = req.params;
+    let book = await Book.findById(id);
+    res.render("books/edit.ejs" , {book});
+});
+
+app.put("/books/:id" , async (req,res) => {
+    let { id } = req.params;
+    const updatedBook = await Book.findByIdAndUpdate(id, req.body.Book, { new: true });
     res.redirect("/books");
 });
 
