@@ -1,0 +1,33 @@
+*{
+    background-color: #F5EFE6;
+}
+
+/*Nav bar*/
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.nav a{
+    background-color: #4B2E2B;
+}
+
+.nav{
+    display:flex;
+    gap:20px;
+    padding:10px;
+    background-color: #4B2E2B;
+    height: 50px;
+    width: 700px;
+    margin-left: 100px;
+    border-radius: 1rem;
+}
+
+.home{
+    margin-left:10px;
+    margin-top:13px;
+}
+
+.Bnew{
+    margin-top:13px;
+}
