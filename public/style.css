@@ -35,3 +35,33 @@ a{
 .all{
     margin-top:13px;
 }
+
+/* Index page */
+.card{
+    background-color: #8B6F47;
+    width:250px;
+    height:350px;
+    border-radius: 16px;
+    padding:10px;
+}
+
+.card p {
+    background-color: #8B6F47;
+}
+
+.img_book{
+    width:200px;
+    height:200px;
+}
+
+.container1{
+    padding:10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.head{
+    background-color: #8B6F47;
+    font-weight: 1000;
+}
