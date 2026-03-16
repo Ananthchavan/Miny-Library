@@ -2,24 +2,26 @@
 
 <div class="container1">
     <% for(let book of allBooks) { %>
-        <div class="card">
-            <p class="head"><%= book.title %></p>
-            <img class="img_book" src="<%= book.image %>" alt="<%= book.title %>">
-            <p><%= book.author %></p>
-            <p><%= book.price %></p>
-            <!-- 
-            <p><%= book.description %></p>
-            <p><%= book.year %></p>
-            <p><%= book.price %></p>
+        <a href="/books/<%=book._id%>">
+            <div class="card">
+                <p class="head"><%= book.title %></p>
+                <img class="img_book" src="<%= book.image %>" alt="<%= book.title %>">
+                <p><%= book.author %></p>
+                <p><%= book.price %></p>
+                <!-- 
+                <p><%= book.description %></p>
+                <p><%= book.year %></p>
+                <p><%= book.price %></p>
 
-            <form action="/books/<%=book._id%>/edit" method="GET">
-                <button>Edit</button>
-            </form>
+                <form action="/books/<%=book._id%>/edit" method="GET">
+                    <button>Edit</button>
+                </form>
 
-            <form method="POST" action="/books/<%=book._id%>?_method=DELETE">
-                <button>Delete</button>
-            </form>
-            -->
-        </div>
+                <form method="POST" action="/books/<%=book._id%>?_method=DELETE">
+                    <button>Delete</button>
+                </form>
+                -->
+            </div>
+        </a>
     <% } %>
 </div>
