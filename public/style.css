@@ -1,4 +1,4 @@
-*{
+body{
     background-color: #F5EFE6;
 }
 
@@ -134,4 +134,46 @@ a{
 
 .show_desc h3 {
     background-color: #E8DFC9;
+}
+
+/* Footer */
+.f-info{
+    text-align: center;
+    display: flex;
+    flex-direction: column;        
+    justify-content: center;
+    align-items: center;
+    gap: 10px;                     
+    height: 8rem;
+    background-color: #4B2E2B;
+    color: #F5EFE6;
+    border-radius: 12px;
+}
+
+.f-info-socials{
+    display: flex;
+    gap: 15px;
+}
+
+.f-info-socials i{
+    font-size: 1.4rem;
+    color: #F5EFE6;
+}
+
+.f-info-brand{
+    font-size: 0.9rem;
+}
+
+.f-info-links{
+    display: flex;
+    gap: 15px;
+}
+
+.f-info-links a{
+    text-decoration: none;
+    color: #F5EFE6;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline;
 }
