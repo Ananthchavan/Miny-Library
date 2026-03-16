@@ -104,6 +104,7 @@ a{
     padding:8px 14px;
     border-radius:6px;
     cursor:pointer;
+    margin-bottom: 20px;
 }
 
 .show_btn:hover{
