@@ -1,22 +1,23 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
-<div class="container1">
-            <div class="card">
-                <p class="head"><%= book1.title %></p>
-                <img class="img_book" src="<%= book1.image %>" alt="<%= book1.title %>">
-                <p><%= book1.author %></p>
-                <p><%= book1.price %></p>
-                <p><%= book1.description %></p>
-                <p><%= book1.year %></p>
-                <p><%= book1.price %></p>
+<div class="show_container">
+        <div class="show_card">
+            <img class="show_img" src="<%= book1.image %>" alt="<%= book1.title %>">
+            <h2>Title: <%= book1.title %></h2>
+            <h4>Author: <%= book1.author %></h4>
+            <h4>Price: <%= book1.price %></h4>
+            <h4>Year: <%= book1.year %></h4>
 
-                <form action="/books/<%=book1._id%>/edit" method="GET">
-                    <button>Edit</button>
-                </form>
+            <form action="/books/<%=book1._id%>/edit" method="GET">
+                <button class="show_btn">Edit</button>
+            </form>
 
-                <form method="POST" action="/books/<%=book1._id%>?_method=DELETE">
-                    <button>Delete</button>
-                </form>
-                
-            </div>
+            <form method="POST" action="/books/<%=book1._id%>?_method=DELETE">
+                <button class="del_btn">Delete</button>
+            </form>
+        </div>
+        <div class="show_desc">
+            <h3>Description:</h3>
+            <p><%= book1.description %></p>
+        </div>
 </div>
