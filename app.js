@@ -48,7 +48,7 @@ app.get("/books/new" , (req,res) => {
 app.post("/books", async (req,res) => {
     const newBook = new Book(req.body.Book);
     await newBook.save();
-    res.redirect("/books");
+    res.redirect(`/books/${newBook._id}`);
 });
 
 //Update Books
@@ -62,7 +62,7 @@ app.get("/books/:id/edit" , async (req,res) =>{
 app.put("/books/:id" , async (req,res) => {
     let { id } = req.params;
     const updatedBook = await Book.findByIdAndUpdate(id, req.body.Book, { new: true });
-    res.redirect("/books");
+    res.redirect(`/books/${id}`); 
 });
 
 //Delete Route
@@ -71,7 +71,6 @@ app.delete("/books/:id" , async (req,res) => {
     await Book.findByIdAndDelete(id);
     res.redirect("/books");
 });
-
 
 //show Route
 app.get("/books/:id" , async (req,res) => {
