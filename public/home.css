@@ -1,18 +1,19 @@
-.container2{
+
+.home-section {
     display: flex;
     margin-top: 20px;
-    background-color: F5EFE6;
+    background-color: #F5EFE6;
 }
 
-h1{
+.home-title {
     font-size: 60px;
-    font-weight: 1200;
+    font-weight: 1200; 
     margin-left: 60px;
 }
 
-.home_img{
+.home-image {
     height: 700px;
-    width:600px;
+    width: 600px;
     border-radius: 10px;
     margin-left: 90px;
 }
