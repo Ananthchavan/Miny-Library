@@ -1,13 +1,40 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
-<h1>Edit Your Book</h1>
+<div class="edit_cont">
+    <h1>Edit Your Book</h1>
+    <form method="POST" action="/books/<%=book._id%>?_method=PUT">
+        <div class="edit_ele">
+            <div>
+                <label for="title">Title</label>
+                <input value="<%=book.title%>" type="text" name="Book[title]" />
+            </div>
 
-<form method="POST" action="/books/<%=book._id%>?_method=PUT">
-    <input value="<%=book.title%>" name="Book[title]"/>
-    <input value="<%=book.image%>" name="Book[image]"/>
-    <input value="<%=book.author%>" name="Book[author]"/>
-    <input value="<%=book.description%>" name="Book[description]"/>
-    <input value="<%=book.year%>" name="Book[year]"/>
-    <input value="<%=book.price%>" name="Book[price]"/>
-    <button>Update Book</button>
-</form>
+            <div>
+                <label for="image" >Image</label>
+                <input value="<%=book.image%>" type="text" name="Book[image]"/>
+            </div>
+
+            <div>
+                <label for="author" >Author</label>
+                <input value="<%=book.author%>" type="text" name="Book[author]"/>
+            </div>
+
+            <div>
+                <label for="desc" >Description</label>
+                <input value="<%=book.description%>" type="text" name="Book[description]"/>
+            </div>
+
+            <div>
+                <label for="year" >Year</label>
+                <input value="<%=book.year%>" type="number" name="Book[year]"/>
+            </div>
+
+            <div>
+                <label for="price" >Price</label>
+                <input value="<%=book.price%>" type="number" name="Book[price]"/>
+            </div>
+        </div>
+        
+        <button class="edit_btn" type="submit">Update Book</button>
+    </form>
+</div>
