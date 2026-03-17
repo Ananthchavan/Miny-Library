@@ -1,11 +1,39 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
-<form method="POST" action="/books">
-    <input placeholder="Enter title" name="Book[title]"/>
-    <input placeholder="Paste image url" name="Book[image]"/>
-    <input placeholder="Author name" name="Book[author]"/>
-    <input placeholder="Description" name="Book[description]"/>
-    <input placeholder="Enter Year" name="Book[year]"/>
-    <input placeholder="Enter Price" name="Book[price]"/>
-    <button>Create Book</button>
-</form>
+<div class="new_cont">
+    <h1>Add New Book</h1>
+        <form method="POST" action="/books">
+            <div class="new_ele">
+            <div>
+                <label for="title">Title</label>
+                <input type="text" name="Book[title]" />
+            </div>
+
+            <div>
+                <label for="image" >Image</label>
+                <input type="text" name="Book[image]"/>
+            </div>
+
+            <div>
+                <label for="author" >Author</label>
+                <input type="text" name="Book[author]"/>
+            </div>
+
+            <div>
+                <label for="desc" >Description</label>
+                <input type="text" name="Book[description]"/>
+            </div>
+
+            <div>
+                <label for="year" >Year</label>
+                <input type="number" name="Book[year]"/>
+            </div>
+
+            <div>
+                <label for="price" >Price</label>
+                <input type="number" name="Book[price]"/>
+            </div>
+        </div>
+            <button class="new_btn" type="submit">Create Book</button>
+        </form>
+</div>

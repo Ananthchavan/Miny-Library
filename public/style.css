@@ -148,6 +148,29 @@ a {
     margin-bottom: 150px;
 }
 
+/*new Page*/
+.new_cont{
+    text-align:center;
+    font-size: 20px;
+}
+
+.new_ele{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.new_btn{
+    margin-top:20px;
+    background-color:#4B2E2B;
+    color:#F5EFE6;
+    border:none;
+    padding:8px 14px;
+    border-radius:6px;
+    cursor:pointer;
+    margin-bottom: 150px;
+}
+
 /* Footer */
 .f-info{
     text-align: center;
