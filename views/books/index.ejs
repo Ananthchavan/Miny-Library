@@ -4,10 +4,14 @@
     <% for(let book of allBooks) { %>
         <a href="/books/<%=book._id%>">
             <div class="card">
-                <p class="head"><%= book.title %></p>
-                <img class="img_book" src="<%= book.image %>" alt="<%= book.title %>">
-                <p><%= book.author %></p>
-                <p><%= book.price %></p>
+                <div class="idx_part1">
+                    <img class="img_book" src="<%= book.image %>" alt="<%= book.title %>">
+                </div>
+                <div class="idx_part2">
+                    <p class="head"><%= book.title %></p>
+                    <p><%= book.author %></p>
+                    <p><%= book.price %></p>
+                </div>
                 <!-- 
                 <p><%= book.description %></p>
                 <p><%= book.year %></p>
