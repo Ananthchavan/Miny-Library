@@ -30,5 +30,25 @@
         <h3>Description</h3>
         <p><%= book1.description %></p>
     </div>
+     
+    <div>
+        <h3>Leave a Review:</h3>
+        <form action="/books/<%=book1._id%>/reviews" method="POST">
+            <label for="comment">Comments</label>
+            <textarea id="comment" name="review[comment]" placeholder="Leave your comment"></textarea>
+            <input type="number" name="review[rating]" min="0" max="5"/>
+            <button>Submit</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="comm">
+        <h2>All Reviews:</h2>
+        <% for(let review of book1.reviews) { %>
+            <p>Rating: <%= review.rating %></p>
+            <p>Comment: <%= review.comment %></p>
+        <% } %>
+    </div>    
 
 </div>

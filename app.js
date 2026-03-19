@@ -6,6 +6,7 @@ const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
 
 const Book = require("./models/book.js");
+const Review = require("./models/review.js");
 
 const MONGOURL = "mongodb://localhost:27017/library";
 
@@ -75,8 +76,19 @@ app.delete("/books/:id" , async (req,res) => {
 //show Route
 app.get("/books/:id" , async (req,res) => {
     let {id} = req.params;
-    let book1 = await Book.findById(id);
+    let book1 = await Book.findById(id).populate("reviews");
     res.render("books/show" , {book1});
+});
+
+// <===== Reviews =====>
+app.post("/books/:id/reviews" , async (req,res) => {
+    let {id} = req.params;
+    let book = await Book.findById(id);
+    let newReview = new Review(req.body.review);
+    book.reviews.push(newReview);
+    await newReview.save();
+    await book.save();
+    res.redirect(`/books/${id}`);
 });
 
 app.listen(3000 , () => {
