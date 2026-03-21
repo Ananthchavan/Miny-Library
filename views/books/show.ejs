@@ -51,7 +51,9 @@
                 <div class="comment_card">
                     <p>Rating: <%= review.rating %></p>
                     <p>Comment: <%= review.comment %></p>
-                    <button class="review_del_btn">Delete</button>
+                    <form method="POST" action="/books/<%=book1._id%>/reviews/<%=review._id%>?_method=DELETE">
+                        <button class="review_del_btn">Delete</button>
+                    </form>
                 </div>
             <% } %> 
         </div>

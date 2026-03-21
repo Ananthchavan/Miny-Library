@@ -91,6 +91,15 @@ app.post("/books/:id/reviews" , async (req,res) => {
     res.redirect(`/books/${id}`);
 });
 
+app.delete("/books/:id/reviews/:reviewId", async (req, res) => {
+    let { id, reviewId } = req.params;
+    await Book.findByIdAndUpdate(id, {
+        $pull: { reviews: reviewId }
+    });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/books/${id}`);
+});
+
 app.listen(3000 , () => {
     console.log("Server is running on port 3000");
 });
