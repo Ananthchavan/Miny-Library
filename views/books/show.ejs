@@ -36,10 +36,11 @@
     <div class="review_new">
         <h3>Leave a Review:</h3>
         <form action="/books/<%=book1._id%>/reviews" method="POST">
-            <label for="comment">Comments</label>
-            <textarea id="comment" name="review[comment]" placeholder="Leave your comment"></textarea>
-            <input type="number" name="review[rating]" min="0" max="5"/>
-            <button class="review_btn">Submit</button>
+                <label for="comment">Comments :</label> <br><br>
+                <textarea cols="25" rows="5" id="comment" name="review[comment]" placeholder="Leave your comment"></textarea> <br><br>
+                <label for="rating">Rating :</label>
+                <input type="number" name="review[rating]" min="0" max="5"/> <br><br>
+                <button class="review_btn">Submit</button>
         </form>
     </div>
 

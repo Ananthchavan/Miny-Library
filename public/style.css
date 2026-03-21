@@ -24,7 +24,7 @@ a {
     margin-left: 10px;
 }
 
-/* Index page */
+/* <================ INDEX PAGE =====================> */
 .container1 {
     padding: 40px;
     display: flex;
@@ -84,7 +84,8 @@ a {
     background: none;
 }
 
-/*show Page*/
+/* <============== SHOW PAGE ==============>*/
+
 /*  MAIN LAYOUT  */
 .show_container {
     display: flex;
@@ -191,6 +192,8 @@ a {
 /* Reviews */
 .review_new{
     margin-left: 80px;
+    display: flex;
+    flex-direction: column;
 }
 
 .comment_card{
@@ -230,7 +233,8 @@ a {
     margin-bottom:10px;
 }
 
-/* Edit page*/
+
+/* <====================== EDIT PAGE ======================> */
 .edit_cont{
     text-align:center;
     font-size: 20px;
@@ -253,7 +257,7 @@ a {
     margin-bottom: 150px;
 }
 
-/*new Page*/
+/* <=================== NEW PAGE ====================>*/
 .new_cont{
     text-align:center;
     font-size: 20px;
@@ -276,7 +280,7 @@ a {
     margin-bottom: 150px;
 }
 
-/* Footer */
+/* <======================= FOOTER ======================> */
 .f-info{
     text-align: center;
     display: flex;
