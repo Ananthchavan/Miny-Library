@@ -2,7 +2,7 @@
 
 <div class="edit_cont">
     <h1>Edit Your Book</h1>
-    <form method="POST" action="/books/<%=book._id%>?_method=PUT">
+    <form enctype="multipart/form-data" method="POST" action="/books/<%=book._id%>?_method=PUT">
         <div class="edit_ele">
             <div>
                 <label for="title">Title</label>
@@ -11,7 +11,7 @@
 
             <div>
                 <label for="image" >Image</label>
-                <input value="<%=book.image%>" type="text" name="Book[image]"/>
+                <input value="<%=book.image%>" type="file" name="Book[image]"/>
             </div>
 
             <div>

@@ -5,7 +5,7 @@
         <a href="/books/<%=book._id%>">
             <div class="card">
                 <div class="idx_part1">
-                    <img class="img_book" src="<%= book.image %>" alt="<%= book.title %>">
+                    <img class="img_book" src="<%= book.image?.url %>" alt="<%= book.title %>">
                 </div>
                 <div class="idx_part2">
                     <p class="head"><%= book.title %></p>

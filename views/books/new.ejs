@@ -2,7 +2,7 @@
 
 <div class="new_cont">
     <h1>Add New Book</h1>
-        <form method="POST" action="/books">
+        <form method="POST" action="/books" enctype="multipart/form-data">
             <div class="new_ele">
             <div>
                 <label for="title">Title</label>
@@ -11,7 +11,7 @@
 
             <div>
                 <label for="image" >Image</label>
-                <input type="text" name="Book[image]"/>
+                <input type="file" name="Book[image]"/>
             </div>
 
             <div>
