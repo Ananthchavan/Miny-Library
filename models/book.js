@@ -13,7 +13,10 @@ const bookSchema = new Schema({
     },
     description: String,
     year: Number,
-    image: String,
+    image: {
+        url: String,
+        filename: String
+    },
     price: Number,
     reviews: [{
         type: Schema.Types.ObjectId,
@@ -21,5 +24,5 @@ const bookSchema = new Schema({
     }],
 });
 
-const Book = mongoose.model("Book" , bookSchema);
+const Book = mongoose.model("Book", bookSchema);
 module.exports = Book;
