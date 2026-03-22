@@ -1,9 +1,17 @@
+if(process.env.NODE_ENV != "production"){
+    require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
 const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
+const multer = require("multer");
+const {storage} = require("./cloudconfig.js");
+const upload = multer({storage});
+
 
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
@@ -46,10 +54,13 @@ app.get("/books/new" , (req,res) => {
     res.render("books/new");
 });
 
-app.post("/books", async (req,res) => {
-    const newBook = new Book(req.body.Book);
-    await newBook.save();
-    res.redirect(`/books/${newBook._id}`);
+app.post("/books", upload.single("Book[image]") , async (req,res) => { 
+    let url = req.file.path; 
+    let filename = req.file.filename;
+     const newBook = new Book(req.body.Book);
+      newBook.image = {url,filename};
+       await newBook.save(); 
+       res.redirect(`/books/${newBook._id}`); 
 });
 
 //Update Books
@@ -60,10 +71,21 @@ app.get("/books/:id/edit" , async (req,res) =>{
     res.render("books/edit.ejs" , {book});
 });
 
-app.put("/books/:id" , async (req,res) => {
+app.put("/books/:id", upload.single("Book[image]"), async (req, res) => {
     let { id } = req.params;
-    const updatedBook = await Book.findByIdAndUpdate(id, req.body.Book, { new: true });
-    res.redirect(`/books/${id}`); 
+    let url = req.file.path;
+    let filename = req.file.filename;
+
+    const updatedBook = await Book.findByIdAndUpdate(
+        id,
+        {
+            ...req.body.Book,
+            image: { url, filename }
+        },
+        { new: true }
+    );
+
+    res.redirect(`/books/${id}`);
 });
 
 //Delete Route
