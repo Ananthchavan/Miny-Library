@@ -12,6 +12,9 @@ const multer = require("multer");
 const {storage} = require("./cloudconfig.js");
 const upload = multer({storage});
 const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 
 const Book = require("./models/book.js");
@@ -50,6 +53,16 @@ const sessionOptions = {
         httpOnly: true,
     },
 };
+
+app.use(session(sessionOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 app.get("/" , (req,res) => {
     res.render("books/home");
