@@ -68,7 +68,7 @@ app.get("/" , (req,res) => {
     res.render("books/home");
 });
 
-//All books
+// <=========== Books  =============>
 app.get("/books", async (req, res) => {
     let allBooks = await Book.find();
     res.render("books/index", { allBooks });
@@ -127,7 +127,7 @@ app.get("/books/:id" , async (req,res) => {
     res.render("books/show" , {book1});
 });
 
-// <===== Reviews =====>
+// <========== Reviews ==========>
 app.post("/books/:id/reviews" , async (req,res) => {
     let {id} = req.params;
     let book = await Book.findById(id);
@@ -145,6 +145,20 @@ app.delete("/books/:id/reviews/:reviewId", async (req, res) => {
     });
     await Review.findByIdAndDelete(reviewId);
     res.redirect(`/books/${id}`);
+});
+
+// <========== USER ROUTES =============>
+app.get("/signup" , (req,res) => {
+    res.render("users/signup");
+});
+
+app.post("/signup" , async (req,res) => {
+    let {username , email , password} = req.body;
+    const newUser = new User({email,username});
+    const registeredUser = await User.register(newUser,password);
+    req.login(registeredUser , (err) => {
+        res.redirect("/books");
+    });
 });
 
 app.listen(3000 , () => {
