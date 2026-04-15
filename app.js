@@ -63,6 +63,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+});
+
 
 app.get("/" , (req,res) => {
     res.render("books/home");
@@ -160,6 +165,19 @@ app.post("/signup" , async (req,res) => {
         res.redirect("/books");
     });
 });
+
+app.get("/login" , (req,res) => {
+    res.render("users/login");
+})
+
+app.post("/login",
+    passport.authenticate("local", {
+        failureRedirect: "/login"
+    }),
+    (req, res) => {
+        res.redirect("/books");
+    }
+);
 
 app.listen(3000 , () => {
     console.log("Server is running on port 3000");
