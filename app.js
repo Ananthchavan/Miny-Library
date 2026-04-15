@@ -11,6 +11,7 @@ const methodOverride = require("method-override");
 const multer = require("multer");
 const {storage} = require("./cloudconfig.js");
 const upload = multer({storage});
+const session = require("express-session");
 
 
 const Book = require("./models/book.js");
@@ -38,6 +39,17 @@ app.use(express.static(path.join(__dirname,"public")));
 app.use(express.static("public"));
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
+
+const sessionOptions = {
+    secret: "mysupercode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+};
 
 app.get("/" , (req,res) => {
     res.render("books/home");
