@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Review = require("./review.js");
+const User = require("./user.js");
 
 const bookSchema = new Schema({
     title: {
@@ -22,6 +23,10 @@ const bookSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Review",
     }],
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 const Book = mongoose.model("Book", bookSchema);
