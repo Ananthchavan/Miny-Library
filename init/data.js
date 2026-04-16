@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const sampleBooks = [
 {
   title: "Atomic Habits",
@@ -8,7 +10,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1552728089-57bdde30beb3",
     filename: "library_images"
   },
-  price: 499
+  price: 499,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "The Alchemist",
@@ -19,7 +23,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f",
     filename: "library_images"
   },
-  price: 350
+  price: 350,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Clean Code",
@@ -30,7 +36,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1512820790803-83ca734da794",
     filename: "library_images"
   },
-  price: 650
+  price: 650,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Deep Work",
@@ -41,7 +49,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f",
     filename: "library_images"
   },
-  price: 420
+  price: 420,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "The Pragmatic Programmer",
@@ -52,7 +62,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
     filename: "library_images"
   },
-  price: 700
+  price: 700,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Rich Dad Poor Dad",
@@ -63,7 +75,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d",
     filename: "library_images"
   },
-  price: 300
+  price: 300,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Think and Grow Rich",
@@ -74,7 +88,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1473755504818-b72b6dfdc226",
     filename: "library_images"
   },
-  price: 280
+  price: 280,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Zero to One",
@@ -85,7 +101,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570",
     filename: "library_images"
   },
-  price: 450
+  price: 450,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Start With Why",
@@ -96,7 +114,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
     filename: "library_images"
   },
-  price: 390
+  price: 390,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Eloquent JavaScript",
@@ -107,7 +127,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1518770660439-4636190af475",
     filename: "library_images"
   },
-  price: 520
+  price: 520,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "You Don't Know JS",
@@ -118,7 +140,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
     filename: "library_images"
   },
-  price: 480
+  price: 480,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 },
 {
   title: "Designing Data-Intensive Applications",
@@ -129,7 +153,9 @@ const sampleBooks = [
     url: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f",
     filename: "library_images"
   },
-  price: 850
+  price: 850,
+  reviews: [],
+  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
 }
 ];
 
