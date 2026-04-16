@@ -179,6 +179,15 @@ app.post("/login",
     }
 );
 
+app.get("/logout", (req, res, next) => {
+    req.logout(function(err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/books");
+    });
+});
+
 app.listen(3000 , () => {
     console.log("Server is running on port 3000");
 });
