@@ -15,6 +15,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const flash = require("connect-flash");
 
 
 const Book = require("./models/book.js");
@@ -55,6 +56,7 @@ const sessionOptions = {
 };
 
 app.use(session(sessionOptions));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,6 +66,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
     next();
 });
@@ -89,7 +93,8 @@ app.post("/books", upload.single("Book[image]") , async (req,res) => {
     let filename = req.file.filename;
      const newBook = new Book(req.body.Book);
       newBook.image = {url,filename};
-       await newBook.save(); 
+       await newBook.save();
+       req.flash("success" , "Book Added"); 
        res.redirect(`/books/${newBook._id}`); 
 });
 
@@ -114,7 +119,7 @@ app.put("/books/:id", upload.single("Book[image]"), async (req, res) => {
         },
         { new: true }
     );
-
+    req.flash("success" , "Book Updated");
     res.redirect(`/books/${id}`);
 });
 
@@ -122,6 +127,7 @@ app.put("/books/:id", upload.single("Book[image]"), async (req, res) => {
 app.delete("/books/:id" , async (req,res) => {
     let {id} = req.params;
     await Book.findByIdAndDelete(id);
+    req.flash("success" , "Book Deleted");
     res.redirect("/books");
 });
 
@@ -140,6 +146,7 @@ app.post("/books/:id/reviews" , async (req,res) => {
     book.reviews.push(newReview);
     await newReview.save();
     await book.save();
+    req.flash("success" , "Review created");
     res.redirect(`/books/${id}`);
 });
 
@@ -149,6 +156,7 @@ app.delete("/books/:id/reviews/:reviewId", async (req, res) => {
         $pull: { reviews: reviewId }
     });
     await Review.findByIdAndDelete(reviewId);
+    req.flash("success" , "Review Deleted");
     res.redirect(`/books/${id}`);
 });
 
@@ -162,6 +170,7 @@ app.post("/signup" , async (req,res) => {
     const newUser = new User({email,username});
     const registeredUser = await User.register(newUser,password);
     req.login(registeredUser , (err) => {
+        req.flash("success" , "SignUp Successfull");
         res.redirect("/books");
     });
 });
@@ -175,6 +184,7 @@ app.post("/login",
         failureRedirect: "/login"
     }),
     (req, res) => {
+        req.flash("success" , "Login Successfull");
         res.redirect("/books");
     }
 );
@@ -184,6 +194,7 @@ app.get("/logout", (req, res, next) => {
         if (err) {
             return next(err);
         }
+        req.flash("success" , "Logout Successfull");
         res.redirect("/books");
     });
 });
