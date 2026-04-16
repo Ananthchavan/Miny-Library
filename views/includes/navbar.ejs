@@ -2,7 +2,11 @@
     <a class="nav-home" href="/">Home</a>
     <a class="nav-all" href="/books">All Books</a>
     <a class="nav-new" href="/books/new">Add new Book</a>
-    <a class="nav-all" href="/signup">SignUp</a>
-    <a class="nav-all" href="/login">Login</a>
-    <a class="nav-all" href="/logout">Logout</a>
+    <% if(!currentUser){ %>
+        <a class="nav-all" href="/signup">SignUp</a>
+        <a class="nav-all" href="/login">Login</a>
+    <% } %>
+    <% if(currentUser) { %>
+        <a class="nav-all" href="/logout">Logout</a>
+    <% } %>
 </div>
