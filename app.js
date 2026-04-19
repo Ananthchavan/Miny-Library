@@ -20,6 +20,7 @@ const flash = require("connect-flash");
 
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
+const {isLoggedIn,isOwner} = require("./middlewares.js");
 
 const MONGOURL = "mongodb://localhost:27017/library";
 
@@ -84,15 +85,16 @@ app.get("/books", async (req, res) => {
 });
 
 //Add books
-app.get("/books/new" , (req,res) => {
+app.get("/books/new" ,isLoggedIn, (req,res) => {
     res.render("books/new");
 });
 
-app.post("/books", upload.single("Book[image]") , async (req,res) => { 
+app.post("/books", isLoggedIn ,upload.single("Book[image]") , async (req,res) => { 
     let url = req.file.path; 
     let filename = req.file.filename;
      const newBook = new Book(req.body.Book);
       newBook.image = {url,filename};
+      newBook.owner = req.user._id;
        await newBook.save();
        req.flash("success" , "Book Added"); 
        res.redirect(`/books/${newBook._id}`); 
@@ -100,13 +102,13 @@ app.post("/books", upload.single("Book[image]") , async (req,res) => {
 
 //Update Books
 
-app.get("/books/:id/edit" , async (req,res) =>{
+app.get("/books/:id/edit" , isLoggedIn ,isOwner,  async (req,res) =>{
     let {id} = req.params;
     let book = await Book.findById(id);
     res.render("books/edit.ejs" , {book});
 });
 
-app.put("/books/:id", upload.single("Book[image]"), async (req, res) => {
+app.put("/books/:id", isLoggedIn ,isOwner, upload.single("Book[image]"), async (req, res) => {
     let { id } = req.params;
     let url = req.file.path;
     let filename = req.file.filename;
@@ -124,7 +126,7 @@ app.put("/books/:id", upload.single("Book[image]"), async (req, res) => {
 });
 
 //Delete Route
-app.delete("/books/:id" , async (req,res) => {
+app.delete("/books/:id" , isLoggedIn ,isOwner,async (req,res) => {
     let {id} = req.params;
     await Book.findByIdAndDelete(id);
     req.flash("success" , "Book Deleted");
@@ -187,7 +189,8 @@ app.post("/login",
     }),
     (req, res) => {
         req.flash("success" , "Login Successfull");
-        res.redirect("/books");
+        let redirectUrl = res.locals.redirectUrl || "/books";
+        res.redirect(redirectUrl);
     }
 );
 
