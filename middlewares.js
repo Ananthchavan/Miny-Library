@@ -27,3 +27,13 @@ module.exports.isOwner = async(req,res,next) => {
     }
     next();
 };
+
+module.exports.isReviewOwner = async (req,res,next) => {
+    let {id, reviewId} = req.params;
+    let review = await Review.findById(reviewId);
+    if(!review.author.equals(res.locals.currentUser._id)){
+        req.flash("error" , "You are not the Owner");
+        return res.redirect(`/books/${id}`);
+    }
+    next();
+};

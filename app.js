@@ -20,7 +20,7 @@ const flash = require("connect-flash");
 
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
-const {isLoggedIn,isOwner} = require("./middlewares.js");
+const {isLoggedIn,isOwner,isReviewOwner} = require("./middlewares.js");
 
 const MONGOURL = "mongodb://localhost:27017/library";
 
@@ -143,18 +143,19 @@ app.get("/books/:id" , async (req,res) => {
 });
 
 // <========== Reviews ==========>
-app.post("/books/:id/reviews" , async (req,res) => {
+app.post("/books/:id/reviews" , isLoggedIn , async (req,res) => {
     let {id} = req.params;
     let book = await Book.findById(id);
     let newReview = new Review(req.body.review);
     book.reviews.push(newReview);
+    newReview.author = res.locals.currentUser._id;
     await newReview.save();
     await book.save();
     req.flash("success" , "Review created");
     res.redirect(`/books/${id}`);
 });
 
-app.delete("/books/:id/reviews/:reviewId", async (req, res) => {
+app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner ,async (req, res) => {
     let { id, reviewId } = req.params;
     await Book.findByIdAndUpdate(id, {
         $pull: { reviews: reviewId }
@@ -169,7 +170,7 @@ app.get("/signup" , (req,res) => {
     res.render("users/signup");
 });
 
-app.post("/signup" , async (req,res) => {
+app.post("/signup",async (req,res) => {
     let {username , email , password} = req.body;
     const newUser = new User({email,username});
     const registeredUser = await User.register(newUser,password);
