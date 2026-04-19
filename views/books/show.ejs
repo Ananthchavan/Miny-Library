@@ -50,6 +50,7 @@
         <div class="comments">
             <% for(let review of book1.reviews) { %>
                 <div class="comment_card">
+                    <p><%= review.author.username %></p>
                     <p>Rating: <%= review.rating %></p>
                     <p>Comment: <%= review.comment %></p>
                     <form method="POST" action="/books/<%=book1._id%>/reviews/<%=review._id%>?_method=DELETE">

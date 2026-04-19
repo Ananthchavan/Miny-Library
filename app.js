@@ -137,8 +137,13 @@ app.delete("/books/:id" , isLoggedIn ,isOwner,async (req,res) => {
 app.get("/books/:id" , async (req,res) => {
     let {id} = req.params;
     let book1 = await Book.findById(id)
-        .populate("reviews")
-        .populate("owner");
+    .populate({
+        path: "reviews",
+        populate: {
+            path: "author"
+        }
+    })
+    .populate("owner");
     res.render("books/show" , {book1});
 });
 
