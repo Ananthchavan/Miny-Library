@@ -20,7 +20,8 @@ const flash = require("connect-flash");
 
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
-const {isLoggedIn,isOwner,isReviewOwner} = require("./middlewares.js");
+const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview} = require("./middlewares.js");
+const wrapAsync = require("./utils/wrapAsync.js");
 
 const MONGOURL = "mongodb://localhost:27017/library";
 
@@ -79,17 +80,17 @@ app.get("/" , (req,res) => {
 });
 
 // <=========== Books  =============>
-app.get("/books", async (req, res) => {
+app.get("/books", wrapAsync(async (req, res) => {
     let allBooks = await Book.find();
     res.render("books/index", { allBooks });
-});
+}));
 
 //Add books
 app.get("/books/new" ,isLoggedIn, (req,res) => {
     res.render("books/new");
 });
 
-app.post("/books", isLoggedIn ,upload.single("Book[image]") , async (req,res) => { 
+app.post("/books", isLoggedIn  ,upload.single("Book[image]"), validateBook ,wrapAsync(async (req,res) => { 
     let url = req.file.path; 
     let filename = req.file.filename;
      const newBook = new Book(req.body.Book);
@@ -98,17 +99,21 @@ app.post("/books", isLoggedIn ,upload.single("Book[image]") , async (req,res) =>
        await newBook.save();
        req.flash("success" , "Book Added"); 
        res.redirect(`/books/${newBook._id}`); 
-});
+}) );
 
 //Update Books
 
-app.get("/books/:id/edit" , isLoggedIn ,isOwner,  async (req,res) =>{
+app.get("/books/:id/edit" , isLoggedIn ,isOwner,  wrapAsync(async (req,res) =>{
     let {id} = req.params;
     let book = await Book.findById(id);
+    if(!book){
+        req.flash("error" , "The book dosent exist");
+        return res.redirect("/books");
+    }
     res.render("books/edit.ejs" , {book});
-});
+}) );
 
-app.put("/books/:id", isLoggedIn ,isOwner, upload.single("Book[image]"), async (req, res) => {
+app.put("/books/:id", isLoggedIn ,isOwner, upload.single("Book[image]"), validateBook ,wrapAsync(async (req, res) => {
     let { id } = req.params;
     let url = req.file.path;
     let filename = req.file.filename;
@@ -123,18 +128,18 @@ app.put("/books/:id", isLoggedIn ,isOwner, upload.single("Book[image]"), async (
     );
     req.flash("success" , "Book Updated");
     res.redirect(`/books/${id}`);
-});
+}) );
 
 //Delete Route
-app.delete("/books/:id" , isLoggedIn ,isOwner,async (req,res) => {
+app.delete("/books/:id" , isLoggedIn ,isOwner, wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Book.findByIdAndDelete(id);
     req.flash("success" , "Book Deleted");
     res.redirect("/books");
-});
+}) );
 
 //show Route
-app.get("/books/:id" , async (req,res) => {
+app.get("/books/:id" , wrapAsync(async (req,res) => {
     let {id} = req.params;
     let book1 = await Book.findById(id)
     .populate({
@@ -144,11 +149,15 @@ app.get("/books/:id" , async (req,res) => {
         }
     })
     .populate("owner");
+    if(!book1){
+        req.flash("error" , "The book dosent exist");
+        return res.redirect("/books");
+    }
     res.render("books/show" , {book1});
-});
+}) );
 
 // <========== Reviews ==========>
-app.post("/books/:id/reviews" , isLoggedIn , async (req,res) => {
+app.post("/books/:id/reviews" , isLoggedIn , validateReview , wrapAsync(async (req,res) => {
     let {id} = req.params;
     let book = await Book.findById(id);
     let newReview = new Review(req.body.review);
@@ -158,9 +167,9 @@ app.post("/books/:id/reviews" , isLoggedIn , async (req,res) => {
     await book.save();
     req.flash("success" , "Review created");
     res.redirect(`/books/${id}`);
-});
+}) );
 
-app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner ,async (req, res) => {
+app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner , wrapAsync(async (req, res) => {
     let { id, reviewId } = req.params;
     await Book.findByIdAndUpdate(id, {
         $pull: { reviews: reviewId }
@@ -168,22 +177,30 @@ app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner ,async (req
     await Review.findByIdAndDelete(reviewId);
     req.flash("success" , "Review Deleted");
     res.redirect(`/books/${id}`);
-});
+}) );
 
 // <========== USER ROUTES =============>
 app.get("/signup" , (req,res) => {
     res.render("users/signup");
 });
 
-app.post("/signup",async (req,res) => {
-    let {username , email , password} = req.body;
-    const newUser = new User({email,username});
-    const registeredUser = await User.register(newUser,password);
-    req.login(registeredUser , (err) => {
-        req.flash("success" , "SignUp Successfull");
-        res.redirect("/books");
-    });
-});
+app.post("/signup", wrapAsync(async (req,res) => {
+    try{
+        let {username , email , password} = req.body;
+        const newUser = new User({email,username});
+        const registeredUser = await User.register(newUser,password);
+        req.login(registeredUser , (err) => {
+            if(err){
+                return next(err);
+            }
+            req.flash("success" , "SignUp Successfull");
+            res.redirect("/books");
+        });
+    } catch(e){
+        req.flash("error" , e.message);
+        res.redirect("/signup");
+    }
+}) );
 
 app.get("/login" , (req,res) => {
     res.render("users/login");
@@ -191,7 +208,8 @@ app.get("/login" , (req,res) => {
 
 app.post("/login",
     passport.authenticate("local", {
-        failureRedirect: "/login"
+        failureRedirect: "/login",
+        failureFlash: true,
     }),
     (req, res) => {
         req.flash("success" , "Login Successfull");
@@ -208,6 +226,17 @@ app.get("/logout", (req, res, next) => {
         req.flash("success" , "Logout Successfull");
         res.redirect("/books");
     });
+});
+
+app.use((req,res,next) => {
+    next(new ExpressError(404 , "Page Not Found"));
+});
+
+app.use((err,req,res,next) => {
+    const status = err.statusCode || 500;
+    const message = err.message || "Something went wrong";
+
+    res.status(status).render("error.ejs" , {err});
 });
 
 app.listen(3000 , () => {
