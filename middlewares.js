@@ -1,6 +1,7 @@
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
 const {bookSchema , reviewSchema} = require("./schema.js");
+const ExpressError = require("./utils/ExpressError.js");
 
 module.exports.isLoggedIn = (req,res,next) => {
     if(!req.isAuthenticated()){
@@ -36,4 +37,24 @@ module.exports.isReviewOwner = async (req,res,next) => {
         return res.redirect(`/books/${id}`);
     }
     next();
+};
+
+module.exports.validateBook = (req,res,next) => {
+    let {error} = bookSchema.validate(req.body);
+    if(error) {
+        let errMsg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(400 , errMsg);
+    } else {
+        next();
+    }
+};
+
+module.exports.validateReview = (req,res,next) => {
+        let {error} = reviewSchema.validate(req.body);
+        if(error){
+           let errMsg = error.details.map(el => el.message).join(", "); 
+            throw new ExpressError(400 , errMsg);
+        } else {
+            next();
+        }
 };
