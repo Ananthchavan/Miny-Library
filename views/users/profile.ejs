@@ -1,1 +1,60 @@
 <% layout("/layouts/boilerplate.ejs") %>
+<div class="profile_container">
+    <div class="profile_header">
+        <div class="profile_header_left">
+            <div class="profile_avatar">
+                <%= currentUser.username.slice(0,2).toUpperCase() %>
+            </div>
+            <div>
+                <h2><%= currentUser.username %></h2>
+                <p><%= currentUser.email %></p>
+            </div>
+        </div>
+        <div class="profile_header_right">
+            <span class="profile_badge">Member</span>
+            <a href="/logout" class="profile_btn">Log out</a>
+        </div>
+    </div>
+
+    <div class="profile_divider"></div>
+    <p class="profile_section_label">Dashboard</p>
+
+    <div class="profile_grid">
+        <a href="/books" class="profile_card">
+            <div class="profile_card_icon">📚</div>
+            <h3>My Books</h3>
+            <p>Browse and manage books you have added to the library.</p>
+            <span class="profile_card_link">View collection →</span>
+        </a>
+        <a href="#" class="profile_card">
+            <div class="profile_card_icon">📖</div>
+            <h3>Borrowed Books</h3>
+            <p>Track books currently borrowed and their due dates.</p>
+            <span class="profile_card_link">View borrowed →</span>
+        </a>
+        <a href="/books" class="profile_card">
+            <div class="profile_card_icon">📝</div>
+            <h3>My Reviews</h3>
+            <p>All reviews you have written across the platform.</p>
+            <span class="profile_card_link">View reviews →</span>
+        </a>
+        <a href="/books/new" class="profile_card">
+            <div class="profile_card_icon">➕</div>
+            <h3>Add a Book</h3>
+            <p>Contribute to the library by uploading a new book.</p>
+            <span class="profile_card_link">Upload now →</span>
+        </a>
+        <a href="#" class="profile_card">
+            <div class="profile_card_icon">⭐</div>
+            <h3>Favorites</h3>
+            <p>Books you have saved and want to revisit.</p>
+            <span class="profile_card_link">View saved →</span>
+        </a>
+        <a href="#" class="profile_card">
+            <div class="profile_card_icon">⚙️</div>
+            <h3>Settings</h3>
+            <p>Update your profile information and preferences.</p>
+            <span class="profile_card_link">Edit profile →</span>
+        </a>
+    </div>
+</div>
