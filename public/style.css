@@ -9,7 +9,7 @@ body{
     padding: 10px;
     background-color: #4B2E2B;
     height: 50px;
-    width: 700px;
+    width: 1200px;
     margin-left: 100px;
     border-radius: 1rem;
 }
@@ -22,6 +22,14 @@ a {
 
 .nav-home {
     margin-left: 10px;
+}
+
+.icon1 {
+    margin-left: 650px;
+}
+
+.icon3 {
+    margin-left: 750px;
 }
 
 /* <================ INDEX PAGE =====================> */

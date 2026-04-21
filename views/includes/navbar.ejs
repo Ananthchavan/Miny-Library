@@ -3,10 +3,11 @@
     <a class="nav-all" href="/books">All Books</a>
     <a class="nav-new" href="/books/new">Add new Book</a>
     <% if(!currentUser){ %>
-        <a class="nav-all" href="/signup">SignUp</a>
-        <a class="nav-all" href="/login">Login</a>
+        <a class="nav-all icon1" href="/signup">SignUp</a>
+        <a class="nav-all icon2" href="/login">Login</a>
     <% } %>
     <% if(currentUser) { %>
-        <a class="nav-all" href="/logout">Logout</a>
+        <a class="nav-all icon3" href="/logout">Logout</a>
     <% } %>
+    <a class="nav-all icon4"> <i class="fa-regular fa-user"></i> Profile</a>
 </div>
