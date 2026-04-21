@@ -79,6 +79,10 @@ app.get("/" , (req,res) => {
     res.render("books/home");
 });
 
+app.get("/profile" , (req,res) => {
+    res.render("users/profile");
+})
+
 // <=========== Books  =============>
 app.get("/books", wrapAsync(async (req, res) => {
     let allBooks = await Book.find();
