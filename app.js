@@ -20,6 +20,7 @@ const flash = require("connect-flash");
 
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
+const WishList = require("./models/wishList.js");
 const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview} = require("./middlewares.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 
@@ -182,6 +183,35 @@ app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner , wrapAsync
     req.flash("success" , "Review Deleted");
     res.redirect(`/books/${id}`);
 }) );
+
+// <============ WISHLIST ROUTES ===============>
+app.get("/wishlist" ,isLoggedIn , wrapAsync(async(req,res) => {
+    let wishList = await WishList.findOne({user: req.user._id}).populate("books");
+    res.render("wishlist/index.ejs" , {wishList});
+}) );
+
+app.post("/wishlist/:id" , isLoggedIn , wrapAsync(async (req,res) => {
+    const {id} = req.params;
+
+    await WishList.findOneAndUpdate(
+        {user: req.user._id},
+        { $addToSet :{books : id} },
+        {upsert: true, new: true},
+    );
+
+    req.flash("success" , "Book sucessfully added to wish List");
+    res.redirect(`/books/${id}`);
+}));
+
+app.delete("/wishlist/:id" , isLoggedIn , wrapAsync(async(req,res) => {
+    let {id} = req.params;
+    await WishList.findOneAndUpdate(
+        {user: req.user._id},
+        {$pull : {books: id}}
+    );
+    req.flash("success" ,"Book removed from wishList");
+    res.redirect("/wishlist");
+}));
 
 // <========== USER ROUTES =============>
 app.get("/signup" , (req,res) => {

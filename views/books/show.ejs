@@ -30,7 +30,9 @@
         <h3>Description</h3>
         <p><%= book1.description %></p>
     </div>
-        
+    <form method="POST" action="/wishlist/<%=book1._id%>">
+        <button>Add to Wish List</button>
+    </form>
 </div>
 
     <div class="review_new">

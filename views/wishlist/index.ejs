@@ -1,0 +1,41 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<h2>My WishList</h2>
+ 
+<% if(!wishList || wishList.books.length == 0) { %>
+    <p>Your wishlist is empty. <a href="/books">Browse books</a></p>
+<% } else { %>
+    <div class="container1">
+    <% for(let book of wishList.books){ %>
+        <a href="/books/<%=book._id%>">
+            <div class="card">
+                <div class="idx_part1">
+                    <img class="img_book" src="<%= book.image?.url %>" alt="<%= book.title %>">
+                </div>
+                <div class="idx_part2">
+                    <p class="head"><%= book.title %></p>
+                    <p class="author"><%= book.author %></p>
+                    <p class="price"><%= book.price %></p>
+                </div>
+                <form action="/wishlist/<%= book._id %>?_method=DELETE" method="POST">
+                    <button>Remove</button>
+                </form>
+                <!-- 
+                <p><%= book.description %></p>
+                <p><%= book.year %></p>
+                <p><%= book.price %></p>
+
+                <form action="/books/<%=book._id%>/edit" method="GET">
+                    <button>Edit</button>
+                </form>
+
+                <form method="POST" action="/books/<%=book._id%>?_method=DELETE">
+                    <button>Delete</button>
+                </form>
+                -->
+            </div>
+        </a>
+    <% } %>
+    </div>
+<% } %>
+
+    
