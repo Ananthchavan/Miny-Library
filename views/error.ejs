@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<style>
+.error-box{
+    max-width:600px;
+    margin:40px auto;
+    padding:25px 30px;
+    background-color:#E8DFC9;
+    border-radius:12px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.1);
+    text-align:center;
+    font-family:sans-serif;
+}
+
+.error-title{
+    color:#7A3E3E;
+    margin-bottom:10px;
+}
+
+.error-message{
+    color:#4B2E2B;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.error-stack{
+    color:#555;
+    font-size:12px;
+    margin-top:15px;
+    text-align:left;
+    overflow:auto;
+    max-height:150px;
+    background:#F5EFE6;
+    padding:10px;
+    border-radius:6px;
+}
+</style>
+
+<div class="error-box">
+    <h4 class="error-title">Error: <%= err.statusCode %></h4>
+    <p class="error-message"><%= err.message %></p>
+    <p class="error-stack"><%= err.stack %></p>
+</div>
