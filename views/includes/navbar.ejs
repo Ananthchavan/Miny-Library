@@ -1,8 +1,11 @@
 <div class="library-nav">
     <a class="nav-home" href="/">Home</a>
     <a class="nav-all" href="/books">All Books</a>
-    <a class="nav-new" href="/books/new">Add new Book</a>
+    <% if (currentUser && currentUser.role === "admin") { %>
+        <a class="nav-new" href="/books/new">Add new Book</a>
+    <% } %>
     <% if(!currentUser){ %>
+        <a class="nav-all " href="/admin/signup">Admin SignUp</a>
         <a class="nav-all icon1" href="/signup">SignUp</a>
         <a class="nav-all icon2" href="/login">Login</a>
     <% } %>

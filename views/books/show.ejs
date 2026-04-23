@@ -5,7 +5,6 @@
     <!-- LEFT SECTION -->
     <div class="show_card">
         <img class="show_img" src="<%= book1.image?.url %>" alt="<%= book1.title %>">
-        <h2 class="title"><%= book1.owner.username %></h2>
         <h2 class="title">Title: <%= book1.title %></h2>
 
         <div class="book_info">
@@ -14,15 +13,17 @@
             <h4 class="year">Year: <%= book1.year %></h4>
         </div>
 
-        <div class="btn_group">
-            <form action="/books/<%=book1._id%>/edit" method="GET">
-                <button class="show_btn">Edit</button>
-            </form>
+        <% if (currentUser && currentUser.role === "admin") { %>
+            <div class="btn_group">
+                <form action="/books/<%=book1._id%>/edit" method="GET">
+                    <button class="show_btn">Edit</button>
+                </form>
 
-            <form method="POST" action="/books/<%=book1._id%>?_method=DELETE">
-                <button class="del_btn">Delete</button>
-            </form>
-        </div>
+                <form method="POST" action="/books/<%=book1._id%>?_method=DELETE">
+                    <button class="del_btn">Delete</button>
+                </form>
+            </div>
+        <% } %>
     </div>
 
     <!-- RIGHT SECTION -->
