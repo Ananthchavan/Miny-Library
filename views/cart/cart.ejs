@@ -1,0 +1,38 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<div class="cart_page">
+    <h2 class="cart_heading">My Cart</h2>
+
+    <% if (!cart || cart.books.length === 0) { %>
+        <p>Your cart is empty. <a href="/books">Browse books</a></p>
+    <% } else { %>
+        <div class="cart_wrapper">
+        <% for (let book of cart.books) { %>
+            <div class="cart_item">
+                <a href="/books/<%= book._id %>" style="display:contents">
+                    <div class="cart_cover">
+                        <img class="cart_img" src="<%= book.image?.url %>" alt="<%= book.title %>">
+                    </div>
+                    <div class="cart_info">
+                        <p class="cart_title"><%= book.title %></p>
+                        <p class="cart_author"><%= book.author %></p>
+                        <p class="cart_price">₹<%= book.price %></p>
+                    </div>
+                </a>
+                <form class="cart_form" action="/cart/<%= book._id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="cart_remove_btn">Remove</button>
+                </form>
+            </div>
+        <% } %>
+        </div>
+
+        <div class="cart_summary">
+            <div>
+                <div class="cart_total_label">Total (<%= cart.books.length %> items)</div>
+                <div class="cart_total_amount">
+                    ₹<%= cart.books.reduce((sum, b) => sum + b.price, 0) %>
+                </div>
+            </div>
+            <button class="cart_checkout_btn">Checkout</button>
+        </div>
+    <% } %>
+</div>
