@@ -22,7 +22,7 @@ const Book = require("./models/book.js");
 const Review = require("./models/review.js");
 const WishList = require("./models/wishList.js");
 const Cart = require("./models/cart.js");
-const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview} = require("./middlewares.js");
+const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview,isAdmin} = require("./middlewares.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 
 const MONGOURL = "mongodb://localhost:27017/library";
@@ -92,11 +92,11 @@ app.get("/books", wrapAsync(async (req, res) => {
 }));
 
 //Add books
-app.get("/books/new" ,isLoggedIn, (req,res) => {
+app.get("/books/new" ,isLoggedIn, isAdmin , (req,res) => {
     res.render("books/new");
 });
 
-app.post("/books", isLoggedIn  ,upload.single("Book[image]"), validateBook ,wrapAsync(async (req,res) => { 
+app.post("/books", isLoggedIn , isAdmin ,upload.single("Book[image]"), validateBook ,wrapAsync(async (req,res) => { 
     let url = req.file.path; 
     let filename = req.file.filename;
      const newBook = new Book(req.body.Book);
@@ -109,7 +109,7 @@ app.post("/books", isLoggedIn  ,upload.single("Book[image]"), validateBook ,wrap
 
 //Update Books
 
-app.get("/books/:id/edit" , isLoggedIn ,isOwner,  wrapAsync(async (req,res) =>{
+app.get("/books/:id/edit" , isLoggedIn ,isAdmin,  wrapAsync(async (req,res) =>{
     let {id} = req.params;
     let book = await Book.findById(id);
     if(!book){
@@ -119,7 +119,7 @@ app.get("/books/:id/edit" , isLoggedIn ,isOwner,  wrapAsync(async (req,res) =>{
     res.render("books/edit.ejs" , {book});
 }) );
 
-app.put("/books/:id", isLoggedIn ,isOwner, upload.single("Book[image]"), validateBook ,wrapAsync(async (req, res) => {
+app.put("/books/:id", isLoggedIn , isAdmin ,upload.single("Book[image]"), validateBook ,wrapAsync(async (req, res) => {
     let { id } = req.params;
     let url = req.file.path;
     let filename = req.file.filename;
@@ -137,7 +137,7 @@ app.put("/books/:id", isLoggedIn ,isOwner, upload.single("Book[image]"), validat
 }) );
 
 //Delete Route
-app.delete("/books/:id" , isLoggedIn ,isOwner, wrapAsync(async (req,res) => {
+app.delete("/books/:id" , isLoggedIn , isAdmin , wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Book.findByIdAndDelete(id);
     req.flash("success" , "Book Deleted");
@@ -252,7 +252,7 @@ app.get("/signup" , (req,res) => {
 app.post("/signup", wrapAsync(async (req,res) => {
     try{
         let {username , email , password} = req.body;
-        const newUser = new User({email,username});
+        const newUser = new User({email,username,role: "user"});
         const registeredUser = await User.register(newUser,password);
         req.login(registeredUser , (err) => {
             if(err){
@@ -289,6 +289,31 @@ app.get("/logout", (req, res, next) => {
             return next(err);
         }
         req.flash("success" , "Logout Successfull");
+        res.redirect("/books");
+    });
+});
+
+// <==================== ADMIN ROUTES ==================>
+const ADMIN_SECRET = "Thala67";
+
+app.get("/admin/signup" , (req,res) => {
+   res.render("admin/signup.ejs"); 
+});
+
+app.post("/admin/signup" , async (req,res) => {
+    const { username, email, password, secretCode } = req.body;
+
+    if(secretCode !== ADMIN_SECRET){
+        req.flash("error" , "Invalid secret code");
+        return res.redirect("/admin/signup");
+    }
+
+    const newUser = new User({ username, email, role: "admin" });
+    const registeredUser = await User.register(newUser, password);
+
+    req.login(registeredUser, (err) => {
+        if (err) return next(err);
+        req.flash("success", "Admin account created!");
         res.redirect("/books");
     });
 });
