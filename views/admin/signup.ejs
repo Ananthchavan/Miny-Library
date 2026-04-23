@@ -1,0 +1,11 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<h1>Admin Signup</h1>
+
+<form action="/admin/signup" method="POST">
+  <input type="text" name="username" placeholder="Username" required />
+  <input type="email" name="email" placeholder="Email" required />
+  <input type="password" name="password" placeholder="Password" required />
+  <input type="password" name="secretCode" placeholder="Admin Secret Code" required />
+  <button type="submit">Create Admin Account</button>
+</form>
