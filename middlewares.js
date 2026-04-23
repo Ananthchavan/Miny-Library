@@ -58,3 +58,11 @@ module.exports.validateReview = (req,res,next) => {
             next();
         }
 };
+
+module.exports.isAdmin = (req,res,next) => {
+    if(req.user && req.user.role === "admin"){
+        return next();
+    }
+    req.flash("error" , "You dont have permission");
+    return res.redirect("/books");
+};
