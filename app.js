@@ -21,6 +21,7 @@ const flash = require("connect-flash");
 const Book = require("./models/book.js");
 const Review = require("./models/review.js");
 const WishList = require("./models/wishList.js");
+const Cart = require("./models/cart.js");
 const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview} = require("./middlewares.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 
@@ -212,6 +213,36 @@ app.delete("/wishlist/:id" , isLoggedIn , wrapAsync(async(req,res) => {
     req.flash("success" ,"Book removed from wishList");
     res.redirect("/wishlist");
 }));
+
+// <=============== CART ===================>
+
+app.get("/cart" , isLoggedIn ,wrapAsync(async (req,res) => {
+    let cart = await Cart.findOneAndUpdate({user: req.user._id}).populate("books");
+    res.render("cart/cart.ejs" , {cart});
+}) );
+
+app.post("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
+    let {id} = req.params;
+
+    await Cart.findOneAndUpdate(
+        {user: req.user._id},
+        {$addToSet : {books: id}},
+        {upsert: true, new: true},
+    );
+
+    req.flash("success" , "Book sucessfully added to Cart");
+    res.redirect(`/books/${id}`);
+}));
+
+app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
+    let {id} = req.params;
+    await Cart.findOneAndUpdate(
+        {user: req.user._id},
+        {$pull : {books: id}},
+    );
+    req.flash("success" ,"Book removed from Cart");
+    res.redirect("/cart");
+}) );
 
 // <========== USER ROUTES =============>
 app.get("/signup" , (req,res) => {
