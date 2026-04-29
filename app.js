@@ -22,6 +22,7 @@ const Book = require("./models/book.js");
 const Review = require("./models/review.js");
 const WishList = require("./models/wishList.js");
 const Cart = require("./models/cart.js");
+const Borrow = require("./models/borrow.js");
 const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview,isAdmin} = require("./middlewares.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 
@@ -243,6 +244,24 @@ app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     req.flash("success" ,"Book removed from Cart");
     res.redirect("/cart");
 }) );
+
+// <======================= BORROW ROUTES =====================> 
+app.get("/borrow/:id" , async (req,res) => {
+    let {id} = req.params;
+
+    const book = await Book.findById(id);
+    if(!book) {
+        req.flash("error" , "Book not Found");
+        return res.redirect("/books");
+    }
+
+    const dailyRate = parseFloat((2/100) * book.price).toFixed(2);
+    const options = [7,14,21,28].map(d => ({
+        days: d,
+        charge: parseFloat( (dailyRate * d).toFixed(2) ),
+    }));
+    res.render("borrow/new" , {book , options});
+});
 
 // <========== USER ROUTES =============>
 app.get("/signup" , (req,res) => {
