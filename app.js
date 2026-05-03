@@ -263,6 +263,53 @@ app.get("/borrow/:id" , async (req,res) => {
     res.render("borrow/new" , {book , options});
 });
 
+app.post("/borrow/:id" , async(req,res) => {
+    let {id} = req.params;
+    const days = parseInt(req.body.days);
+
+    const book = await Book.findById(id);
+    if(!book) {
+        req.flash("error" , "Book not Found");
+        return res.redirect("/books");
+    }
+
+    if(![7,14,21,28].includes(days)){
+        req.flash("error" , "Invalid Borrow duration");
+        return res.render(`/borrow/${book._id}`);
+    }
+
+    const exsisting = await Book.findOne({
+        user: req.user._id,
+        book: book._id,
+        status: "active"
+    });
+
+    if(exsisting) {
+        req.flash("error" , "You have already borrowed this book");
+        return res.redirect(`/books/${book._id}`);
+    }
+
+    const borrowedAt = new Date();
+    const dueDate = new Date(borrowedAt);
+    dueDate.setDate(dueDate.getDate() + days);
+
+    const dailyRate = (2/100) * book.price;
+    const charge = parseFloat( (dailyRate * days).toFixed(2) );
+
+    await Borrow.create({
+        user: req.user._id,
+        book: book._id,
+        borrowedAt,
+        dueDate,
+        status: "active",
+        charge,
+        totalAmount: charge
+    });
+
+    req.flash("success", `Borrowed for ${days} days! Return by ${dueDate.toDateString()}. Charge: ${charge}`);
+    res.redirect("/borrows");
+});
+
 // <========== USER ROUTES =============>
 app.get("/signup" , (req,res) => {
     res.render("users/signup");
