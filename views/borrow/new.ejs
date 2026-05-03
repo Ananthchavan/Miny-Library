@@ -1,0 +1,106 @@
+<h1>Borrow: <%= book.title %></h1>
+
+<div class="book-summary">
+  <img src="<%= book.image.url %>" alt="<%= book.title %>" width="120"/>
+  <p><strong>Author:</strong> <%= book.author %></p>
+  <p><strong>Price:</strong> ₹<%= book.price %></p>
+</div>
+
+<form action="/borrow/<%= book._id %>" method="POST" >
+    <h2>Select Borrow Duration</h2>
+
+    <div class="day-options">
+        <% for (let opt of options) { %>
+            <label class="day-btn">
+                <input
+                    type="radio"
+                    name="days"
+                    value="<%= opt.days %>"
+                    onchange="updateBill(<%= opt.days %>, <%= opt.charge %>)"
+                    <%= opt.days === 7 ? "checked" : "" %>
+                />
+                <span><%= opt.days %> Days</span>
+            </label>
+        <% } %>
+    </div>
+
+    <!-- BILL SUMMARY-->
+     <div class="bill-summary">
+    <h2>Bill Summary</h2>
+        <table>
+        <tr>
+            <td>Book</td>
+            <td><%= book.title %></td>
+        </tr>
+        <tr>
+            <td>Duration</td>
+            <td id="bill-days">7 days</td>
+        </tr>
+        <tr>
+            <td>Daily Rate</td>
+            <td><%= ((2/100) * book.price).toFixed(2) %> / day</td>
+        </tr>
+        <tr>
+            <td>Due Date</td>
+            <td id="bill-due"></td>
+        </tr>
+        <tr>
+            <td><strong>Total Charge</strong></td>
+            <td><strong id="bill-total"><%= options[0].charge %></strong></td>
+        </tr>
+        </table>
+  </div>
+
+  <button type="submit">Confirm Borrow</button>
+  <a href="/books/<%= book._id %>">Cancel</a>
+
+</form>
+
+<script>
+    function updateBill(days,charge) {
+        document.getElementById("bill-days").textContent = days + "days";
+        document.getElementById("bill-total").textContent = charge.toFixed(2);
+        const duedate = new Date();
+        duedate.setDate(duedate.getDate() + days);
+        document.getElementById("bill-due").textContent = duedate.toDateString();
+    }
+
+    updateBill(7, <%= options[0].charge %>);
+</script>
+
+<style>
+  .day-options { 
+    display: flex;
+    gap: 1rem; 
+    margin: 1rem 0; 
+   }
+  .day-btn input { 
+    display: none;
+ }
+  .day-btn span {
+    display: block;
+    padding: 0.6rem 1.4rem;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .day-btn input:checked + span {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #2563eb;
+  }
+  .bill-summary { 
+    margin-top: 1.5rem;
+ }
+  .bill-summary table {
+       border-collapse: collapse;
+       width: 100%;
+       max-width: 400px;
+     }
+  .bill-summary td {
+     padding: 0.5rem 1rem;
+      border-bottom: 1px solid #eee; 
+      }
+</style>
+
