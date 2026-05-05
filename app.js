@@ -25,6 +25,7 @@ const Cart = require("./models/cart.js");
 const Borrow = require("./models/borrow.js");
 const {isLoggedIn,isOwner,isReviewOwner,validateBook,validateReview,isAdmin} = require("./middlewares.js");
 const wrapAsync = require("./utils/wrapAsync.js");
+const ExpressError = require("./utils/ExpressError.js");
 
 const MONGOURL = "mongodb://localhost:27017/library";
 
@@ -246,7 +247,7 @@ app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
 }) );
 
 // <======================= BORROW ROUTES =====================> 
-app.get("/borrow/:id" , async (req,res) => {
+app.get("/borrow/:id" , isLoggedIn ,async (req,res) => {
     let {id} = req.params;
 
     const book = await Book.findById(id);
@@ -263,10 +264,10 @@ app.get("/borrow/:id" , async (req,res) => {
     res.render("borrow/new" , {book , options});
 });
 
-app.post("/borrow/:id" , async(req,res) => {
+app.post("/borrow/:id" , isLoggedIn , async(req,res) => {
     let {id} = req.params;
     const days = parseInt(req.body.days);
-
+    
     const book = await Book.findById(id);
     if(!book) {
         req.flash("error" , "Book not Found");
@@ -301,13 +302,38 @@ app.post("/borrow/:id" , async(req,res) => {
         book: book._id,
         borrowedAt,
         dueDate,
+        days: days,
         status: "active",
         charge,
         totalAmount: charge
     });
 
     req.flash("success", `Borrowed for ${days} days! Return by ${dueDate.toDateString()}. Charge: ${charge}`);
-    res.redirect("/borrows");
+    res.redirect("/borrow");
+});
+
+app.get("/borrow" , isLoggedIn , async(req,res) => {
+    const borrows = await Borrow.find({user: req.user._id}).populate("book").sort({ borrowedAt: -1 });
+    const today = Date.now();
+
+    for(let borrow of borrows){
+        if(borrow.status === "active" && today > borrow.dueDate) {
+            const overdueDays = Math.ceil( (today - borrow.dueDate)/ (1000*60*60*24));
+            const dailyRate = (2/100) * borrow.book.price;
+            const fine = parseFloat( (overdueDays * dailyRate * 1.5).toFixed(2));
+            await Borrow.findByIdAndUpdate(borrow._id, {
+                    status: "overdue",
+                    fine: fine,
+                    totalAmount: parseFloat((borrow.charge + fine).toFixed(2)),
+                    });
+
+            borrow.status = "overdue";
+            borrow.fine = fine;
+            borrow.totalAmount = parseFloat((borrow.charge + fine).toFixed(2));
+                }
+    }
+
+    res.render("borrow/index" , { borrows });
 });
 
 // <========== USER ROUTES =============>

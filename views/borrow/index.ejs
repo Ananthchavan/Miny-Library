@@ -1,0 +1,34 @@
+<h1>My Borrowed Books</h1>
+
+<% if (borrows.length === 0) { %>
+  <p>You haven't borrowed any books. <a href="/books">Browse books</a></p>
+<% } else { %>
+  <% for (let borrow of borrows) { %>
+    <div class="borrow-card">
+      <img src="<%= borrow.book.image.url %>" alt="<%= borrow.book.title %>" width="80"/>
+      <div>
+        <h3><%= borrow.book.title %></h3>
+        <p>Author : <%= borrow.book.author %></p>
+        <p>Borrowed on : <%= borrow.borrowedAt.toDateString() %></p>
+        <p>Due Date : <%= borrow.dueDate.toDateString() %></p>
+        <p>Duration : <%= borrow.days %> days</p>
+
+        <% if (borrow.status === "returned") { %>
+          <span class="badge green">Returned</span>
+          <p>Returned on: <%= borrow.returnedAt.toDateString() %></p>
+        <% } else if (borrow.status === "overdue") { %>
+          <span class="badge red">Overdue</span>
+          <p>Overdue fine: ₹<%= borrow.fine %></p>
+        <% } else { %>
+          <span class="badge blue">Active</span>
+        <% } %>
+
+        <p>Base charge: ₹<%= borrow.charge %></p>
+        <% if (borrow.fine > 0) { %>
+          <p>Fine: ₹<%= borrow.fine %></p>
+        <% } %>
+        <p><strong>Total: ₹<%= borrow.totalAmount %></strong></p>
+      </div>
+    </div>
+  <% } %>
+<% } %>
