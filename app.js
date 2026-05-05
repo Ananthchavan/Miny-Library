@@ -256,6 +256,17 @@ app.get("/borrow/:id" , isLoggedIn ,async (req,res) => {
         return res.redirect("/books");
     }
 
+    const exsisting = await Borrow.findOne({
+        user: req.user._id,
+        book: book._id,
+        status: "active"
+    });
+
+    if(exsisting) {
+        req.flash("error" , "You have already borrowed this book");
+        return res.redirect(`/books/${book._id}`);
+    }
+
     const dailyRate = parseFloat((2/100) * book.price).toFixed(2);
     const options = [7,14,21,28].map(d => ({
         days: d,
