@@ -1,34 +1,150 @@
-<h1>My Borrowed Books</h1>
+<% layout("/layouts/boilerplate.ejs") %>
+
+<style>
+
+/* PAGE */
+.borrow_page_title{
+    text-align:center;
+    color:#4B2E2B;
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+/* EMPTY STATE */
+.empty_borrow{
+    text-align:center;
+    color:#4B2E2B;
+    font-size:18px;
+}
+
+.empty_borrow a{
+    color:#7A3E3E;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* CARD */
+.borrow-card{
+    display:flex;
+    gap:25px;
+    align-items:flex-start;
+    background:#E8DFC9;
+    padding:25px;
+    border-radius:14px;
+    margin:25px auto;
+    width:85%;
+    max-width:900px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* IMAGE */
+.borrow-card img{
+    width:140px;
+    height:200px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+/* CONTENT */
+.borrow-card h3{
+    color:#4B2E2B;
+    margin-bottom:10px;
+}
+
+.borrow-card p{
+    margin:8px 0;
+    color:#444;
+    font-size:15px;
+}
+
+/* BADGES */
+.badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+/* ACTIVE */
+.badge.blue{
+    background:#4B2E2B;
+    color:#F5EFE6;
+}
+
+/* RETURNED */
+.badge.green{
+    background:#8B6F47;
+    color:#F5EFE6;
+}
+
+/* OVERDUE */
+.badge.red{
+    background:#7A3E3E;
+    color:#F5EFE6;
+}
+
+</style>
+
+<h1 class="borrow_page_title">My Borrowed Books</h1>
 
 <% if (borrows.length === 0) { %>
-  <p>You haven't borrowed any books. <a href="/books">Browse books</a></p>
+
+  <p class="empty_borrow">
+      You haven't borrowed any books.
+      <a href="/books">Browse books</a>
+  </p>
+
 <% } else { %>
+
   <% for (let borrow of borrows) { %>
+
     <div class="borrow-card">
+
       <img src="<%= borrow.book.image.url %>" alt="<%= borrow.book.title %>" width="80"/>
+
       <div>
         <h3><%= borrow.book.title %></h3>
+
         <p>Author : <%= borrow.book.author %></p>
+
         <p>Borrowed on : <%= borrow.borrowedAt.toDateString() %></p>
+
         <p>Due Date : <%= borrow.dueDate.toDateString() %></p>
+
         <p>Duration : <%= borrow.days %> days</p>
 
         <% if (borrow.status === "returned") { %>
+
           <span class="badge green">Returned</span>
+
           <p>Returned on: <%= borrow.returnedAt.toDateString() %></p>
+
         <% } else if (borrow.status === "overdue") { %>
+
           <span class="badge red">Overdue</span>
+
           <p>Overdue fine: ₹<%= borrow.fine %></p>
+
         <% } else { %>
+
           <span class="badge blue">Active</span>
+
         <% } %>
 
         <p>Base charge: ₹<%= borrow.charge %></p>
+
         <% if (borrow.fine > 0) { %>
           <p>Fine: ₹<%= borrow.fine %></p>
         <% } %>
+
         <p><strong>Total: ₹<%= borrow.totalAmount %></strong></p>
+
       </div>
+
     </div>
+
   <% } %>
+
 <% } %>
