@@ -1,0 +1,241 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<style>
+  .admin-borrow-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+
+  .borrow-heading {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #222;
+  }
+
+  .empty-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    font-size: 1.1rem;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  }
+
+  .borrow-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+  }
+
+  .borrow-table thead {
+    background: #111827;
+    color: white;
+  }
+
+  .borrow-table th {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  .borrow-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+    font-size: 0.95rem;
+  }
+
+  .borrow-table tbody tr:hover {
+    background: #f9fafb;
+  }
+
+  .book-title {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .user-name {
+    font-weight: 500;
+    color: #2563eb;
+  }
+
+  .money {
+    font-weight: 600;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .active {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .overdue {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .returned {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  .return-btn {
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    background: #111827;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .return-btn:hover {
+    background: #374151;
+    transform: translateY(-2px);
+  }
+
+  .returned-text {
+    font-size: 0.85rem;
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  @media(max-width: 768px) {
+    .borrow-heading {
+      font-size: 1.8rem;
+    }
+
+    .borrow-table th,
+    .borrow-table td {
+      padding: 0.8rem;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<div class="admin-borrow-container">
+
+  <h1 class="borrow-heading">All Borrowed Books</h1>
+
+  <% if (borrows.length === 0) { %>
+
+    <div class="empty-box">
+      No borrow records found.
+    </div>
+
+  <% } else { %>
+
+    <div class="table-wrapper">
+      <table class="borrow-table">
+
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>User</th>
+            <th>Borrowed On</th>
+            <th>Due By</th>
+            <th>Days</th>
+            <th>Charge</th>
+            <th>Fine</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <% for (let borrow of borrows) { %>
+
+            <tr>
+
+              <td class="book-title">
+                <%= borrow.book.title %>
+              </td>
+
+              <td class="user-name">
+                <%= borrow.user.username %>
+              </td>
+
+              <td>
+                <%= borrow.borrowedAt.toDateString() %>
+              </td>
+
+              <td>
+                <%= borrow.dueDate.toDateString() %>
+              </td>
+
+              <td>
+                <%= borrow.days %> days
+              </td>
+
+              <td class="money">
+                ₹<%= borrow.charge %>
+              </td>
+
+              <td class="money">
+                ₹<%= borrow.fine %>
+              </td>
+
+              <td class="money">
+                ₹<%= borrow.totalAmount %>
+              </td>
+
+              <td>
+                <span class="status-badge <%= borrow.status %>">
+                  <%= borrow.status %>
+                </span>
+              </td>
+
+              <td>
+
+                <% if (borrow.status !== "returned") { %>
+
+                  <form action="/borrows/<%= borrow._id %>/return?_method=PATCH" method="POST">
+                    <button class="return-btn" type="submit">
+                      Mark Returned
+                    </button>
+                  </form>
+
+                <% } else { %>
+
+                  <span class="returned-text">
+                    Returned on
+                    <%= borrow.returnedAt.toDateString() %>
+                  </span>
+
+                <% } %>
+
+              </td>
+
+            </tr>
+
+          <% } %>
+
+        </tbody>
+
+      </table>
+    </div>
+
+  <% } %>
+
+</div>

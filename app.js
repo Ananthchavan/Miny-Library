@@ -247,7 +247,17 @@ app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
 }) );
 
 // <======================= BORROW ROUTES =====================> 
-app.get("/borrow/:id" , isLoggedIn ,async (req,res) => {
+
+app.get("/borrow/admin" , isLoggedIn , isAdmin ,wrapAsync(async(req,res) => {
+    const borrows = await Borrow.find({})
+        .populate("book")
+        .populate("user")
+        .sort({ borrowedAt: -1 });
+
+    res.render("borrow/admin" , {borrows});
+}));
+
+app.get("/borrow/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
 
     const book = await Book.findById(id);
@@ -273,9 +283,9 @@ app.get("/borrow/:id" , isLoggedIn ,async (req,res) => {
         charge: parseFloat( (dailyRate * d).toFixed(2) ),
     }));
     res.render("borrow/new" , {book , options});
-});
+}) );
 
-app.post("/borrow/:id" , isLoggedIn , async(req,res) => {
+app.post("/borrow/:id" , isLoggedIn , wrapAsync( async(req,res) => {
     let {id} = req.params;
     const days = parseInt(req.body.days);
     
@@ -288,17 +298,6 @@ app.post("/borrow/:id" , isLoggedIn , async(req,res) => {
     if(![7,14,21,28].includes(days)){
         req.flash("error" , "Invalid Borrow duration");
         return res.render(`/borrow/${book._id}`);
-    }
-
-    const exsisting = await Book.findOne({
-        user: req.user._id,
-        book: book._id,
-        status: "active"
-    });
-
-    if(exsisting) {
-        req.flash("error" , "You have already borrowed this book");
-        return res.redirect(`/books/${book._id}`);
     }
 
     const borrowedAt = new Date();
@@ -321,9 +320,9 @@ app.post("/borrow/:id" , isLoggedIn , async(req,res) => {
 
     req.flash("success", `Borrowed for ${days} days! Return by ${dueDate.toDateString()}. Charge: ${charge}`);
     res.redirect("/borrow");
-});
+}));
 
-app.get("/borrow" , isLoggedIn , async(req,res) => {
+app.get("/borrow" , isLoggedIn , wrapAsync( async(req,res) => {
     const borrows = await Borrow.find({user: req.user._id}).populate("book").sort({ borrowedAt: -1 });
     const today = Date.now();
 
@@ -341,11 +340,12 @@ app.get("/borrow" , isLoggedIn , async(req,res) => {
             borrow.status = "overdue";
             borrow.fine = fine;
             borrow.totalAmount = parseFloat((borrow.charge + fine).toFixed(2));
-                }
+        }
     }
 
     res.render("borrow/index" , { borrows });
-});
+}));
+
 
 // <========== USER ROUTES =============>
 app.get("/signup" , (req,res) => {
