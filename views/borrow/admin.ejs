@@ -233,7 +233,7 @@
 
                 <% if (borrow.status !== "returned") { %>
 
-                  <form action="/borrows/<%= borrow._id %>/return?_method=PATCH" method="POST">
+                  <form action="/borrow/<%= borrow._id %>/return?_method=PATCH" method="POST">
                     <button class="return-btn" type="submit">
                       Mark Returned
                     </button>

@@ -322,6 +322,47 @@ app.post("/borrow/:id" , isLoggedIn , wrapAsync( async(req,res) => {
     res.redirect("/borrow");
 }));
 
+app.patch("/borrow/:id/return" ,isLoggedIn , isAdmin , wrapAsync(async (req,res) => {
+    let {id} = req.params;
+    const borrow = await Borrow.findById(id).populate("book");
+
+    if(!borrow) {
+        req.flash("error" , "Borrow record not found");
+        return res.return("/borrow/admin");
+    }
+
+    if (borrow.status === "returned") {
+        req.flash("error", "This book is already returned.");
+        return res.redirect("/admin/borrows");
+    }
+
+    let fine = 0;
+    const returnedAt = new Date();
+    const daysActuallyBorrowed = Math.ceil( (returnedAt - borrow.borrowedAt) / (1000*60*60*24) );
+    const dailyRate = (2/100) * borrow.book.price;
+    const charge = parseFloat( (dailyRate*daysActuallyBorrowed).toFixed(2));
+
+    if (returnedAt > borrow.dueDate) {
+        const overdueDays = Math.ceil((returnedAt - borrow.dueDate) / (1000 * 60 * 60 * 24));
+        fine = parseFloat((overdueDays * dailyRate * 1.5).toFixed(2));
+    }
+
+    const totalAmount = parseFloat( (charge+fine).toFixed(2));
+
+    await Borrow.findByIdAndUpdate(borrow._id ,{
+        returnedAt,
+        status: "returned",
+        charge,
+        fine,
+        totalAmount,
+    });
+
+    req.flash("success" , `Book returned. Total charged: ₹${totalAmount}`);
+    res.redirect("/borrow/admin");
+}) );
+
+
+
 app.get("/borrow" , isLoggedIn , wrapAsync( async(req,res) => {
     const borrows = await Borrow.find({user: req.user._id}).populate("book").sort({ borrowedAt: -1 });
     const today = Date.now();
