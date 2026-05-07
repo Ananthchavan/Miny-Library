@@ -362,6 +362,14 @@ app.patch("/borrow/:id/return" ,isLoggedIn , isAdmin , wrapAsync(async (req,res)
 }) );
 
 
+app.delete("/borrow/:id/delete" ,isLoggedIn , isAdmin , wrapAsync(async(req,res) => {
+    let {id} = req.params;
+
+    await Borrow.findByIdAndDelete(id);
+    req.flash("success" , "Record successfully deleted");
+    res.redirect("/borrow/admin");
+}) );
+
 
 app.get("/borrow" , isLoggedIn , wrapAsync( async(req,res) => {
     const borrows = await Borrow.find({user: req.user._id}).populate("book").sort({ borrowedAt: -1 });
