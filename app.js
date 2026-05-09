@@ -446,7 +446,7 @@ app.get("/logout", (req, res, next) => {
 });
 
 // <==================== ADMIN ROUTES ==================>
-const ADMIN_SECRET = "Thala67";
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 app.get("/admin/signup" , (req,res) => {
    res.render("admin/signup.ejs"); 
