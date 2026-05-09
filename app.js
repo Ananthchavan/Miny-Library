@@ -445,6 +445,32 @@ app.get("/logout", (req, res, next) => {
     });
 });
 
+app.get("/forgotpass" , (req,res) => {
+    res.render("users/newpass");
+});
+
+app.post("/newpass" , async (req,res) => {
+    try{
+        let {username,email,newPassword} = req.body;
+        const currUser = await User.findOne({
+            username,
+            email,
+        });
+
+        if(!currUser) {
+            req.flash("error" , "Wrong credentials");
+            return res.redirect("/forgotpass");
+        }
+        await currUser.setPassword(newPassword);
+        await currUser.save();
+        req.flash("success" ,"Password Changed");
+        res.redirect("/login");
+    } catch(e){
+        req.flash("error" , e.message);
+        res.redirect("/forgotpass");
+    }
+});
+
 // <==================== ADMIN ROUTES ==================>
 const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
