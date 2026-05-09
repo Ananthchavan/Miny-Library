@@ -92,155 +92,191 @@ a {
     background: none;
 }
 
-/* <============== SHOW PAGE ==============>*/
+/* <============== SHOW PAGE ==============> */
 
-/*  MAIN LAYOUT  */
-.show_container {
-    display: flex;
-    gap: 60px;
-    padding: 40px 80px;
-    align-items: flex-start;
+/* MAIN LAYOUT */
+.show_container{
+    display:flex;
+    gap:60px;
+    padding:40px 80px;
+    align-items:flex-start;
 }
 
-
-/*  LEFT CARD  */
-.show_card {
-    max-width: 400px;
+/* LEFT CARD */
+.show_card{
+    max-width:400px;
 }
 
-
-/*  IMAGE  */
-.show_img {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    margin-bottom: 20px;
+/* IMAGE */
+.show_img{
+    width:100%;
+    height:auto;
+    border-radius:12px;
+    margin-bottom:20px;
 }
 
-
-/*  TITLE  */
-.title {
-    font-size: 26px;
-    margin-bottom: 16px;
+/* TITLE */
+.title{
+    font-size:26px;
+    margin-bottom:16px;
 }
 
-
-/*  BOOK INFO SECTION  */
-.book_info {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 12px;
-    margin-bottom: 20px;
+/* BOOK INFO */
+.book_info{
+    border-bottom:1px solid #ddd;
+    padding-bottom:12px;
+    margin-bottom:20px;
 }
 
-
-/*  TEXT STYLING  */
+/* TEXT */
 .author,
-.year {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 6px;
+.year{
+    font-size:16px;
+    color:#555;
+    margin-bottom:6px;
 }
 
-.price {
-    font-size: 18px;
-    font-weight: 600;
-    color: #6B4F4F;
-    margin: 10px 0;
+.price{
+    font-size:18px;
+    font-weight:600;
+    color:#6B4F4F;
+    margin:10px 0;
 }
 
-
-/*  BUTTON GROUP  */
-.btn_group {
-    display: flex;
-    gap: 10px;
+/* ADMIN BUTTONS */
+.btn_group{
+    display:flex;
+    gap:10px;
 }
 
-
-/*  BUTTONS  */
 .show_btn,
-.del_btn {
-    background-color: #4B2E2B;
-    color: #F5EFE6;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.del_btn{
+    background-color:#4B2E2B;
+    color:#F5EFE6;
+    border:none;
+    padding:8px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.2s ease;
 }
 
 .show_btn:hover,
-.del_btn:hover {
-    background-color: #3a2220;
-    transform: translateY(-2px);
+.del_btn:hover{
+    background-color:#3a2220;
+    transform:translateY(-2px);
 }
 
-
-/*  DESCRIPTION BOX  */
-.show_desc {
-    flex: 1;
-    background-color: #EDE3D2;
-    border-radius: 16px;
-    padding: 30px;
-    min-height: 300px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+/* RIGHT SECTION */
+.right_section{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
 }
 
-
-/*  DESCRIPTION TEXT  */
-.show_desc h3 {
-    font-size: 20px;
-    margin-bottom: 12px;
+/* DESCRIPTION BOX */
+.show_desc{
+    background-color:#EDE3D2;
+    border-radius:16px;
+    padding:30px;
+    min-height:300px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
 
-.show_desc p {
-    color: #444;
-    line-height: 1.6;
+/* DESCRIPTION TEXT */
+.show_desc h3{
+    font-size:20px;
+    margin-bottom:12px;
 }
 
-/* Reviews */
+.show_desc p{
+    color:#444;
+    line-height:1.6;
+}
+
+/* BUTTON AREA */
+.action_btns{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+}
+
+/* FIRST 3 BUTTONS */
+.action_btn{
+    background-color:#4B2E2B;
+    color:#F5EFE6;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    min-width:180px;
+    transition:all 0.2s ease;
+}
+
+.action_btn:hover{
+    background-color:#3a2220;
+    transform:translateY(-2px);
+}
+
+/* BUY BUTTON */
+.buy_form{
+    width:100%;
+}
+
+.buy_btn{
+    background-color:#8B6F47;
+    color:#F5EFE6;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    min-width:180px;
+    transition:all 0.2s ease;
+}
+
+.buy_btn:hover{
+    background-color:#735637;
+    transform:translateY(-2px);
+}
+
+/* REVIEWS */
 .review_new{
-    margin-left: 80px;
-    display: flex;
-    flex-direction: column;
+    margin-left:80px;
+    display:flex;
+    flex-direction:column;
 }
 
 .comment_card{
-    background-color: #EDE3D2;
+    background-color:#EDE3D2;
     height:130px;
     width:275px;
     border-radius:12px;
     padding:8px;
-    margin-left: 80px;
-    margin-bottom: 12px;
+    margin-left:80px;
+    margin-bottom:12px;
 }
 
 .comments{
-    display: flex;
-    flex-wrap: wrap;
+    display:flex;
+    flex-wrap:wrap;
 }
 
-.review_btn {
-    background-color: #4B2E2B;
-    color: #F5EFE6;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
+.review_btn,
+.review_del_btn{
+    background-color:#4B2E2B;
+    color:#F5EFE6;
+    border:none;
+    padding:8px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.2s ease;
 }
 
-.review_del_btn {
-    background-color: #4B2E2B;
-    color: #F5EFE6;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.review_del_btn{
     margin-bottom:10px;
 }
-
 
 /* <====================== EDIT PAGE ======================> */
 /* Container */
