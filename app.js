@@ -87,6 +87,26 @@ app.get("/profile" , (req,res) => {
     res.render("users/profile");
 })
 
+app.post("/search" ,wrapAsync(async(req,res) => {
+    let {search}= req.body;
+    const allBooks = await Book.find({
+        $or: [
+            { title: { $regex: search, $options: "i" } },
+            { author: { $regex: search, $options: "i" } }
+        ]
+    }).populate({ 
+        path: "reviews", 
+        populate: { path: "author" } 
+    }).populate("owner");
+
+    if(!allBooks) {
+        req.flash("error" , "Book with that name not found");
+        return res.redirect("/books");
+    }
+
+    res.render("books/index", { allBooks });
+}) );
+
 // <=========== Books  =============>
 app.get("/books", wrapAsync(async (req, res) => {
     let allBooks = await Book.find();
@@ -449,7 +469,7 @@ app.get("/forgotpass" , (req,res) => {
     res.render("users/newpass");
 });
 
-app.post("/newpass" , async (req,res) => {
+app.post("/newpass" , wrapAsync( async (req,res) => {
     try{
         let {username,email,newPassword} = req.body;
         const currUser = await User.findOne({
@@ -469,7 +489,7 @@ app.post("/newpass" , async (req,res) => {
         req.flash("error" , e.message);
         res.redirect("/forgotpass");
     }
-});
+}));
 
 // <==================== ADMIN ROUTES ==================>
 const ADMIN_SECRET = process.env.ADMIN_SECRET;
@@ -478,7 +498,7 @@ app.get("/admin/signup" , (req,res) => {
    res.render("admin/signup.ejs"); 
 });
 
-app.post("/admin/signup" , async (req,res) => {
+app.post("/admin/signup" , wrapAsync(async (req,res) => {
     const { username, email, password, secretCode } = req.body;
 
     if(secretCode !== ADMIN_SECRET){
@@ -494,7 +514,7 @@ app.post("/admin/signup" , async (req,res) => {
         req.flash("success", "Admin account created!");
         res.redirect("/books");
     });
-});
+}) );
 
 app.use((req,res,next) => {
     next(new ExpressError(404 , "Page Not Found"));

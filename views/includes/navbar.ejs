@@ -6,6 +6,10 @@
     <% } %>
     <% if(!currentUser){ %>
         <a class="nav-all " href="/admin/signup">Admin SignUp</a>
+        <form action="/search" method="POST">
+            <input name="search" placeholder="  Enter Name/Author" class="search_bar"/>
+            <button class="search_btn">Search</button>
+        </form >
         <a class="nav-all icon1" href="/signup">SignUp</a>
         <a class="nav-all icon2" href="/login">Login</a>
     <% } %>
@@ -18,6 +22,10 @@
         <% if (currentUser.role === "admin") { %>
             <a class="nav-new" href="/borrow/admin"> Borrowed Books</a>
         <% } %>
+        <form action="/search" method="POST">
+            <input name="search" placeholder="  Enter Name/Author" class="search_bar"/>
+            <button class="search_btn">Search</button>
+        </form >
         <a class="nav-all icon3" href="/logout">Logout</a>
         <a class="nav-all icon4" href="/profile"> <i class="fa-regular fa-user"></i> Profile</a>
     <% } %>

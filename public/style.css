@@ -25,11 +25,25 @@ a {
 }
 
 .icon1 {
-    margin-left: 760px;
+    margin-left: 500px;
 }
 
 .icon3 {
-    margin-left: 500px;
+    margin-left: 250px;
+}
+
+.search_bar{
+    margin-top:10px;
+    height: 25px;
+    border-radius: 10px;
+}
+
+.search_btn{
+    margin-top:10px;
+    height: 30px;
+    border-radius: 7px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 /* <================ INDEX PAGE =====================> */
