@@ -16,6 +16,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const flash = require("connect-flash");
+const nodemailer = require("nodemailer");
+const cron = require("node-cron");
 
 
 const Book = require("./models/book.js");
@@ -41,6 +43,43 @@ async function main() {
     await mongoose.connect(MONGOURL);
 }
 
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+    }
+});
+
+cron.schedule("0 9 * * *" , async() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const start = new Date(tomorrow);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(tomorrow);
+    end.setHours(23, 59, 59, 999);
+    
+
+    const borrows = await Borrow.find({
+        status: "active",
+        dueDate: {
+            $gte: start,
+            $lte: end, 
+        }
+    }).populate("user").populate("book");
+    
+    
+    for(let borrow of borrows){
+        await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: borrow.user.email,
+            subject: "Book Return Reminder ",
+            text: `Hi ${borrow.user.username}, your borrowed book "${borrow.book.title}" is due tomorrow. Please return it to avoid fines.`
+        });
+    }
+});
 
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
