@@ -376,6 +376,9 @@ app.post("/borrow/:id" , isLoggedIn , wrapAsync( async(req,res) => {
         charge,
         totalAmount: charge
     });
+    book.stock-=1;
+    await book.save();
+    
 
     req.flash("success", `Borrowed for ${days} days! Return by ${dueDate.toDateString()}. Charge: ${charge}`);
     res.redirect("/borrow");
@@ -384,6 +387,7 @@ app.post("/borrow/:id" , isLoggedIn , wrapAsync( async(req,res) => {
 app.patch("/borrow/:id/return" ,isLoggedIn , isAdmin , wrapAsync(async (req,res) => {
     let {id} = req.params;
     const borrow = await Borrow.findById(id).populate("book");
+    const book = borrow.book;
 
     if(!borrow) {
         req.flash("error" , "Borrow record not found");
@@ -415,6 +419,8 @@ app.patch("/borrow/:id/return" ,isLoggedIn , isAdmin , wrapAsync(async (req,res)
         fine,
         totalAmount,
     });
+    book.stock+=1;
+    await book.save();
 
     req.flash("success" , `Book returned. Total charged: ₹${totalAmount}`);
     res.redirect("/borrow/admin");
