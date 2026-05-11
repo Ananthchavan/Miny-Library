@@ -11,8 +11,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 499,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "The Alchemist",
@@ -24,8 +25,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 350,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Clean Code",
@@ -37,8 +39,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 650,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Deep Work",
@@ -50,8 +53,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 420,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "The Pragmatic Programmer",
@@ -63,8 +67,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 700,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Rich Dad Poor Dad",
@@ -76,8 +81,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 300,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Think and Grow Rich",
@@ -89,8 +95,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 280,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Zero to One",
@@ -102,8 +109,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 450,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Start With Why",
@@ -115,8 +123,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 390,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Eloquent JavaScript",
@@ -128,8 +137,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 520,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "You Don't Know JS",
@@ -141,8 +151,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 480,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 },
 {
   title: "Designing Data-Intensive Applications",
@@ -154,8 +165,9 @@ const sampleBooks = [
     filename: "library_images"
   },
   price: 850,
+  stock: 100,
   reviews: [],
-  owner: new mongoose.Types.ObjectId("69e117d19137eb8425acc0c1")
+  owner: new mongoose.Types.ObjectId("6a0217b664ffe4b11bed5073")
 }
 ];
 

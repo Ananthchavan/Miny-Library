@@ -18,7 +18,14 @@ const bookSchema = new Schema({
         url: String,
         filename: String
     },
-    price: Number,
+    price: {
+        type: Number,
+        required: true,
+    } ,
+    stock: {
+        type: Number,
+        required: true,
+    },
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: "Review",
