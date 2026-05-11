@@ -45,18 +45,22 @@
             <form method="POST" action="/wishlist/<%=book1._id%>">
                 <button class="action_btn">Add to Wish List</button>
             </form>
+            
+            <% if(book1.stock !== 0) { %>
+                
+                <form method="POST" action="/cart/<%=book1._id%>">
+                    <button class="action_btn">Add to Cart</button>
+                </form>
 
-            <form method="POST" action="/cart/<%=book1._id%>">
-                <button class="action_btn">Add to Cart</button>
-            </form>
+                <form method="GET" action="/borrow/<%=book1._id%>">
+                    <button class="action_btn">Borrow Book</button>
+                </form>
 
-            <form method="GET" action="/borrow/<%=book1._id%>">
-                <button class="action_btn">Borrow Book</button>
-            </form>
+                <form class="buy_form" method="GET" action="/books">
+                    <button class="buy_btn">Buy Book</button>
+                </form>
 
-            <form class="buy_form" method="GET" action="/books">
-                <button class="buy_btn">Buy Book</button>
-            </form>
+            <% } %>
 
         </div>
 
