@@ -4,8 +4,15 @@
     <% for(let book of allBooks) { %>
         <a href="/books/<%=book._id%>">
             <div class="card">
-                <div class="idx_part1">
-                    <img class="img_book" src="<%= book.image?.url %>" alt="<%= book.title %>">
+                <div class="idx_part1" style="position: relative;">
+                    <img class="img_book" src="<%= book.image?.url %>" alt="<%= book.title %>"
+                        style="<%= book.stock === 0 ? 'filter: brightness(40%);' : '' %>">
+                    <% if(book.stock === 0) { %>
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                            color: red; font-weight: bold; font-size: 1rem; text-align: center; white-space: nowrap;">
+                            Out of Stock
+                        </span>
+                    <% } %>
                 </div>
                 <div class="idx_part2">
                     <p class="head"><%= book.title %></p>
