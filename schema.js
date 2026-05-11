@@ -7,6 +7,7 @@ module.exports.bookSchema = Joi.object({
         description: Joi.string().trim().required(),
         year: Joi.number().integer().min(0).required(),
         price: Joi.number().min(0).required(),
+        stock: Joi.number().min(1).required(),
     }).required()
 });
 
