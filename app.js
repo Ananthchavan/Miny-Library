@@ -6,6 +6,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
+const crypto = require("crypto");
 const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
 const multer = require("multer");
@@ -18,6 +19,7 @@ const User = require("./models/user.js");
 const flash = require("connect-flash");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron");
+const Razorpay = require("razorpay");
 
 
 const Book = require("./models/book.js");
@@ -81,12 +83,19 @@ cron.schedule("0 9 * * *", async () => {
     }
 });
 
+// Razorpay
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride("_method"));
 
 const sessionOptions = {
@@ -378,6 +387,52 @@ app.delete("/cart/:id", isLoggedIn, wrapAsync(async (req, res) => {
     );
     req.flash("success", "Book removed from Cart");
     res.redirect("/cart");
+}));
+
+// Checkout - Create Razorpay Order
+app.post("/checkout/create-order", isLoggedIn, wrapAsync(async (req, res) => {
+    const cart = await Cart.findOne({ user: req.user._id }).populate("books.book");
+
+    if (!cart || cart.books.length === 0) {
+        return res.status(400).json({ error: "Cart is empty" });
+    }
+
+    let totalPrice = 0;
+    for (let item of cart.books) {
+        totalPrice += item.book.price * item.quantity;
+    }
+
+    const options = {
+        amount: Math.round(totalPrice * 100),// Razorpay expects amount in paise
+        currency: "INR",
+        receipt: `order_rcpt_${Date.now()}`,
+    };
+
+    const order = await razorpay.orders.create(options);
+    res.json({ order, key: process.env.RAZORPAY_KEY_ID });
+}));
+
+// Checkout - Verify Payment
+app.post("/checkout/verify-payment", isLoggedIn, wrapAsync(async (req, res) => {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(body)
+        .digest("hex");
+
+    if (expectedSignature === razorpay_signature) {
+        await Cart.findOneAndUpdate(
+            { user: req.user._id },
+            { $set: { books: [] } }
+        );
+
+        req.flash("success", "Payment successful! Your order has been placed.");
+        return res.json({ success: true, redirect: "/books" });
+    } else {
+        return res.status(400).json({ success: false, error: "Payment verification failed" });
+    }
 }));
 
 // <======================= BORROW ROUTES =====================> 
