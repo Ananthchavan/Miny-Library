@@ -118,14 +118,17 @@ app.use((req, res, next) => {
 });
 
 
+// Home Page
 app.get("/" , (req,res) => {
     res.render("books/home");
 });
 
+// Profile Page
 app.get("/profile" , (req,res) => {
     res.render("users/profile");
 })
 
+// Search Books
 app.post("/search" ,wrapAsync(async(req,res) => {
     let {search}= req.body;
     const allBooks = await Book.find({
@@ -147,16 +150,19 @@ app.post("/search" ,wrapAsync(async(req,res) => {
 }) );
 
 // <=========== Books  =============>
+
+// Index - List All Books
 app.get("/books", wrapAsync(async (req, res) => {
     let allBooks = await Book.find();
     res.render("books/index", { allBooks });
 }));
 
-//Add books
+// New - Add Book Form
 app.get("/books/new" ,isLoggedIn, isAdmin , (req,res) => {
     res.render("books/new");
 });
 
+// Create - Save New Book
 app.post("/books", isLoggedIn , isAdmin ,upload.single("Book[image]"), validateBook ,wrapAsync(async (req,res) => { 
     let url = req.file.path; 
     let filename = req.file.filename;
@@ -168,8 +174,7 @@ app.post("/books", isLoggedIn , isAdmin ,upload.single("Book[image]"), validateB
        res.redirect(`/books/${newBook._id}`); 
 }) );
 
-//Update Books
-
+// Edit - Edit Book Form
 app.get("/books/:id/edit" , isLoggedIn ,isAdmin,  wrapAsync(async (req,res) =>{
     let {id} = req.params;
     let book = await Book.findById(id);
@@ -180,6 +185,7 @@ app.get("/books/:id/edit" , isLoggedIn ,isAdmin,  wrapAsync(async (req,res) =>{
     res.render("books/edit.ejs" , {book});
 }) );
 
+// Update - Save Edited Book
 app.put("/books/:id", isLoggedIn , isAdmin ,upload.single("Book[image]"), validateBook ,wrapAsync(async (req, res) => {
     let { id } = req.params;
     let url = req.file.path;
@@ -197,7 +203,7 @@ app.put("/books/:id", isLoggedIn , isAdmin ,upload.single("Book[image]"), valida
     res.redirect(`/books/${id}`);
 }) );
 
-//Delete Route
+// Delete - Remove Book
 app.delete("/books/:id" , isLoggedIn , isAdmin , wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Book.findByIdAndDelete(id);
@@ -205,7 +211,7 @@ app.delete("/books/:id" , isLoggedIn , isAdmin , wrapAsync(async (req,res) => {
     res.redirect("/books");
 }) );
 
-//show Route
+// Show - Book Details Page
 app.get("/books/:id" , wrapAsync(async (req,res) => {
     let {id} = req.params;
     let book1 = await Book.findById(id)
@@ -224,6 +230,7 @@ app.get("/books/:id" , wrapAsync(async (req,res) => {
 }) );
 
 // <========== Reviews ==========>
+// Create Review
 app.post("/books/:id/reviews" , isLoggedIn , validateReview , wrapAsync(async (req,res) => {
     let {id} = req.params;
     let book = await Book.findById(id);
@@ -236,6 +243,7 @@ app.post("/books/:id/reviews" , isLoggedIn , validateReview , wrapAsync(async (r
     res.redirect(`/books/${id}`);
 }) );
 
+// Delete Review
 app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner , wrapAsync(async (req, res) => {
     let { id, reviewId } = req.params;
     await Book.findByIdAndUpdate(id, {
@@ -247,11 +255,13 @@ app.delete("/books/:id/reviews/:reviewId", isLoggedIn, isReviewOwner , wrapAsync
 }) );
 
 // <============ WISHLIST ROUTES ===============>
+// Show Wishlist
 app.get("/wishlist" ,isLoggedIn , wrapAsync(async(req,res) => {
     let wishList = await WishList.findOne({user: req.user._id}).populate("books");
     res.render("wishlist/index.ejs" , {wishList});
 }) );
 
+// Add to Wishlist
 app.post("/wishlist/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     const {id} = req.params;
 
@@ -265,6 +275,7 @@ app.post("/wishlist/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     res.redirect(`/books/${id}`);
 }));
 
+// Remove from Wishlist
 app.delete("/wishlist/:id" , isLoggedIn , wrapAsync(async(req,res) => {
     let {id} = req.params;
     await WishList.findOneAndUpdate(
@@ -277,11 +288,13 @@ app.delete("/wishlist/:id" , isLoggedIn , wrapAsync(async(req,res) => {
 
 // <=============== CART ===================>
 
+// Show Cart
 app.get("/cart" , isLoggedIn ,wrapAsync(async (req,res) => {
     let cart = await Cart.findOne({user: req.user._id}).populate("books.book");
     res.render("cart/cart.ejs" , {cart});
 }) );
 
+// Add to Cart
 app.post("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
 
@@ -305,7 +318,7 @@ app.post("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     res.redirect(`/books/${id}`);
 }));
 
-// Update quantity
+// Update Cart Quantity
 app.patch("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
     let {quantity} = req.body;
@@ -329,6 +342,7 @@ app.patch("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     res.redirect("/cart");
 }));
 
+// Remove from Cart
 app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Cart.findOneAndUpdate(
@@ -341,6 +355,7 @@ app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
 
 // <======================= BORROW ROUTES =====================> 
 
+// Admin - All Borrow Records
 app.get("/borrow/admin" , isLoggedIn , isAdmin ,wrapAsync(async(req,res) => {
     const borrows = await Borrow.find({})
         .populate("book")
@@ -350,6 +365,7 @@ app.get("/borrow/admin" , isLoggedIn , isAdmin ,wrapAsync(async(req,res) => {
     res.render("borrow/admin" , {borrows});
 }));
 
+// Borrow - Select Duration Form
 app.get("/borrow/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
 
@@ -378,6 +394,7 @@ app.get("/borrow/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     res.render("borrow/new" , {book , options});
 }) );
 
+// Borrow - Create Borrow Record
 app.post("/borrow/:id" , isLoggedIn , wrapAsync( async(req,res) => {
     let {id} = req.params;
     const days = parseInt(req.body.days);
@@ -418,6 +435,7 @@ app.post("/borrow/:id" , isLoggedIn , wrapAsync( async(req,res) => {
     res.redirect("/borrow");
 }));
 
+// Admin - Return Book
 app.patch("/borrow/:id/return" ,isLoggedIn , isAdmin , wrapAsync(async (req,res) => {
     let {id} = req.params;
     const borrow = await Borrow.findById(id).populate("book");
@@ -461,6 +479,7 @@ app.patch("/borrow/:id/return" ,isLoggedIn , isAdmin , wrapAsync(async (req,res)
 }) );
 
 
+// Admin - Delete Borrow Record
 app.delete("/borrow/:id/delete" ,isLoggedIn , isAdmin , wrapAsync(async(req,res) => {
     let {id} = req.params;
 
@@ -470,6 +489,7 @@ app.delete("/borrow/:id/delete" ,isLoggedIn , isAdmin , wrapAsync(async(req,res)
 }) );
 
 
+// User - My Borrows
 app.get("/borrow" , isLoggedIn , wrapAsync( async(req,res) => {
     const borrows = await Borrow.find({user: req.user._id}).populate("book").sort({ borrowedAt: -1 });
     const today = Date.now();
@@ -496,10 +516,12 @@ app.get("/borrow" , isLoggedIn , wrapAsync( async(req,res) => {
 
 
 // <========== USER ROUTES =============>
+// Signup Form
 app.get("/signup" , (req,res) => {
     res.render("users/signup");
 });
 
+// Create User Account
 app.post("/signup", wrapAsync(async (req,res) => {
     try{
         let {username , email , password} = req.body;
@@ -518,10 +540,12 @@ app.post("/signup", wrapAsync(async (req,res) => {
     }
 }) );
 
+// Login Form
 app.get("/login" , (req,res) => {
     res.render("users/login");
 })
 
+// Login User
 app.post("/login",
     passport.authenticate("local", {
         failureRedirect: "/login",
@@ -534,6 +558,7 @@ app.post("/login",
     }
 );
 
+// Logout User
 app.get("/logout", (req, res, next) => {
     req.logout(function(err) {
         if (err) {
@@ -544,10 +569,12 @@ app.get("/logout", (req, res, next) => {
     });
 });
 
+// Forgot Password Form
 app.get("/forgotpass" , (req,res) => {
     res.render("users/newpass");
 });
 
+// Reset Password
 app.post("/newpass" , wrapAsync( async (req,res) => {
     try{
         let {username,email,newPassword} = req.body;
@@ -573,10 +600,12 @@ app.post("/newpass" , wrapAsync( async (req,res) => {
 // <==================== ADMIN ROUTES ==================>
 const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
+// Admin Signup Form
 app.get("/admin/signup" , (req,res) => {
    res.render("admin/signup.ejs"); 
 });
 
+// Create Admin Account
 app.post("/admin/signup" , wrapAsync(async (req,res) => {
     const { username, email, password, secretCode } = req.body;
 
@@ -595,10 +624,12 @@ app.post("/admin/signup" , wrapAsync(async (req,res) => {
     });
 }) );
 
+// 404 Handler
 app.use((req,res,next) => {
     next(new ExpressError(404 , "Page Not Found"));
 });
 
+// Error Handler
 app.use((err,req,res,next) => {
     const status = err.statusCode || 500;
     const message = err.message || "Something went wrong";
