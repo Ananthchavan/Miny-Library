@@ -278,28 +278,62 @@ app.delete("/wishlist/:id" , isLoggedIn , wrapAsync(async(req,res) => {
 // <=============== CART ===================>
 
 app.get("/cart" , isLoggedIn ,wrapAsync(async (req,res) => {
-    let cart = await Cart.findOneAndUpdate({user: req.user._id}).populate("books");
+    let cart = await Cart.findOne({user: req.user._id}).populate("books.book");
     res.render("cart/cart.ejs" , {cart});
 }) );
 
 app.post("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
 
-    await Cart.findOneAndUpdate(
-        {user: req.user._id},
-        {$addToSet : {books: id}},
-        {upsert: true, new: true},
-    );
+    let cart = await Cart.findOne({user: req.user._id});
+
+    if(!cart) {
+        cart = new Cart({ user: req.user._id, books: [] });
+    }
+
+    const existingItem = cart.books.find(item => item.book.equals(id));
+
+    if(existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.books.push({ book: id, quantity: 1 });
+    }
+
+    await cart.save();
 
     req.flash("success" , "Book sucessfully added to Cart");
     res.redirect(`/books/${id}`);
+}));
+
+// Update quantity
+app.patch("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
+    let {id} = req.params;
+    let {quantity} = req.body;
+    quantity = parseInt(quantity);
+
+    if(!quantity || quantity < 1) {
+        req.flash("error" , "Quantity must be at least 1");
+        return res.redirect("/cart");
+    }
+
+    let cart = await Cart.findOne({user: req.user._id});
+    if(cart) {
+        const item = cart.books.find(item => item.book.equals(id));
+        if(item) {
+            item.quantity = quantity;
+            await cart.save();
+        }
+    }
+
+    req.flash("success" , "Cart updated");
+    res.redirect("/cart");
 }));
 
 app.delete("/cart/:id" , isLoggedIn , wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Cart.findOneAndUpdate(
         {user: req.user._id},
-        {$pull : {books: id}},
+        {$pull : {books: {book: id}}},
     );
     req.flash("success" ,"Book removed from Cart");
     res.redirect("/cart");
