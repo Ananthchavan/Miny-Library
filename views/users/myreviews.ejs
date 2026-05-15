@@ -1,0 +1,27 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <h2 style="margin-left: 80px; color: #4B2E2B;">My Reviews</h2>
+
+    <% if(myReviews.length === 0) { %>
+        <p style="margin-left: 80px; color: #555;">You haven't written any reviews yet.</p>
+    <% } else { %>
+        <div class="comments">
+            <% for(let review of myReviews) { %>
+                <div class="comment_card">
+                    <p>
+                        <a href="/books/<%= review.bookId %>" style="color: #4B2E2B; text-decoration: none; font-weight: 600;">
+                            📖 <%= review.bookTitle %>
+                        </a>
+                    </p>
+
+                    <div class="review_stars">
+                        <% for(let i = 1; i <= 5; i++) { %>
+                            <span class="star <%= i <= review.rating ? 'star_filled' : 'star_empty' %>">★</span>
+                        <% } %>
+                    </div>
+
+                    <p><%= review.comment %></p>
+                </div>
+            <% } %>
+        </div>
+    <% } %>

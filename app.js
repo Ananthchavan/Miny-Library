@@ -128,6 +128,33 @@ app.get("/profile", (req, res) => {
     res.render("users/profile");
 })
 
+// My Reviews
+app.get("/myreviews", isLoggedIn, wrapAsync(async (req, res) => {
+    const books = await Book.find({ reviews: { $exists: true, $ne: [] } })
+        .populate({
+            path: "reviews",
+            populate: { path: "author" }
+        });
+
+    const myReviews = [];
+    for (let book of books) {
+        for (let review of book.reviews) {
+            if (review.author._id.equals(req.user._id)) {
+                myReviews.push({
+                    bookTitle: book.title,
+                    bookId: book._id,
+                    comment: review.comment,
+                    rating: review.rating,
+                    createdAt: review.createdAt,
+                    reviewId: review._id,
+                });
+            }
+        }
+    }
+
+    res.render("users/myreviews", { myReviews });
+}));
+
 // Search Books
 app.post("/search", wrapAsync(async (req, res) => {
     let { search } = req.body;
