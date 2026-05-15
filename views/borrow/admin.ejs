@@ -248,7 +248,7 @@
                             <%= borrow.returnedAt.toDateString() %>
                         </span>
 
-                        <form action="/admin/borrows/<%= borrow._id %>?_method=DELETE" method="POST">
+                        <form action="/borrow/<%= borrow._id %>/delete?_method=DELETE" method="POST">
                             <button
                             class="delete-btn"
                             type="submit"
