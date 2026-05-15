@@ -67,7 +67,6 @@
                         </form>
 
                         <% } %>
-
                 </div>
                 <% } %>
         </div>
@@ -111,9 +110,11 @@
                         </div>
                         <p>Comment: <%= review.comment %>
                         </p>
-                        <form method="POST" action="/books/<%=book1._id%>/reviews/<%=review._id%>?_method=DELETE">
-                            <button class="review_del_btn">Delete</button>
-                        </form>
+                        <% if(review.author._id.equals(currentUser._id)) { %>
+                            <form method="POST" action="/books/<%=book1._id%>/reviews/<%=review._id%>?_method=DELETE">
+                                <button class="review_del_btn">Delete</button>
+                            </form>
+                            <% } %>
                     </div>
                     <% } %>
             </div>
