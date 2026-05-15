@@ -1,111 +1,118 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
-<div class="show_container">
+    <div class="show_container">
 
-    <!-- LEFT SECTION -->
-    <div class="show_card">
-        <img class="show_img" src="<%= book1.image?.url %>" alt="<%= book1.title %>">
+        <!-- LEFT SECTION -->
+        <div class="show_card">
+            <img class="show_img" src="<%= book1.image?.url %>" alt="<%= book1.title %>">
 
-        <h2 class="title">Title: <%= book1.title %></h2>
+            <h2 class="title">Title: <%= book1.title %>
+            </h2>
 
-        <div class="book_info">
-            <h4 class="author">Author: <%= book1.author %></h4>
-            <h4 class="price">Price: ₹<%= book1.price %></h4>
-            <h4 class="year">Year: <%= book1.year %></h4>
+            <div class="book_info">
+                <h4 class="author">Author: <%= book1.author %>
+                </h4>
+                <h4 class="price">Price: ₹<%= book1.price %>
+                </h4>
+                <h4 class="year">Year: <%= book1.year %>
+                </h4>
+            </div>
+
+            <% if (currentUser && currentUser.role==="admin" ) { %>
+                <div class="btn_group">
+
+                    <form action="/books/<%=book1._id%>/edit" method="GET">
+                        <button class="show_btn">Edit</button>
+                    </form>
+
+                    <form method="POST" action="/books/<%=book1._id%>?_method=DELETE">
+                        <button class="del_btn">Delete</button>
+                    </form>
+
+                </div>
+                <% } %>
         </div>
 
-        <% if (currentUser && currentUser.role === "admin") { %>
-            <div class="btn_group">
 
-                <form action="/books/<%=book1._id%>/edit" method="GET">
-                    <button class="show_btn">Edit</button>
+        <!-- RIGHT SIDE -->
+        <div class="right_section">
+
+            <!-- DESCRIPTION BOX -->
+            <div class="show_desc">
+                <h3>Description</h3>
+                <p>
+                    <%= book1.description %>
+                </p>
+            </div>
+
+            <!-- BUTTONS BELOW DESCRIPTION -->
+            <div class="action_btns">
+
+                <form method="POST" action="/wishlist/<%=book1._id%>">
+                    <button class="action_btn">Add to Wish List</button>
                 </form>
 
-                <form method="POST" action="/books/<%=book1._id%>?_method=DELETE">
-                    <button class="del_btn">Delete</button>
-                </form>
+                <% if(book1.stock !==0) { %>
+
+                    <form method="POST" action="/cart/<%=book1._id%>">
+                        <button class="action_btn">Add to Cart</button>
+                    </form>
+
+                    <form method="GET" action="/borrow/<%=book1._id%>">
+                        <button class="action_btn">Borrow Book</button>
+                    </form>
+
+                    <form class="buy_form" method="GET" action="/books">
+                        <button class="buy_btn">Buy Book</button>
+                    </form>
+
+                    <% } %>
 
             </div>
-        <% } %>
+
+        </div>
+
     </div>
 
 
-    <!-- RIGHT SIDE -->
-    <div class="right_section">
 
-        <!-- DESCRIPTION BOX -->
-        <div class="show_desc">
-            <h3>Description</h3>
-            <p><%= book1.description %></p>
-        </div>
+    <div class="review_new">
+        <h3>Leave a Review:</h3>
+        <form action="/books/<%=book1._id%>/reviews" method="POST">
+            <label for="comment">Comments :</label>
+            <br><br>
+            <textarea cols="25" rows="5" id="comment" name="review[comment]"
+                placeholder="Leave your comment"></textarea>
+            <br><br>
+            <label for="rating">Rating :</label>
+            <input type="number" name="review[rating]" min="0" max="5" />
+            <br><br>
+            <button class="review_btn">Submit</button>
 
-        <!-- BUTTONS BELOW DESCRIPTION -->
-        <div class="action_btns">
+        </form>
+    </div>
 
-            <form method="POST" action="/wishlist/<%=book1._id%>">
-                <button class="action_btn">Add to Wish List</button>
-            </form>
-            
-            <% if(book1.stock !== 0) { %>
-                
-                <form method="POST" action="/cart/<%=book1._id%>">
-                    <button class="action_btn">Add to Cart</button>
+    <hr>
+
+    <h2 style="margin-left: 80px;">All Reviews:</h2>
+
+    <div class="comments">
+        <% for(let review of book1.reviews) { %>
+
+            <div class="comment_card">
+                <p>
+                    <%= review.author.username %>
+                </p>
+                <div class="review_stars">
+                    <% for(let i=1; i <=5; i++) { %>
+                        <span class="star <%= i <= review.rating ? 'star_filled' : 'star_empty' %>">★</span>
+                        <% } %>
+                </div>
+                <p>Comment: <%= review.comment %>
+                </p>
+                <form method="POST" action="/books/<%=book1._id%>/reviews/<%=review._id%>?_method=DELETE">
+                    <button class="review_del_btn">Delete</button>
                 </form>
-
-                <form method="GET" action="/borrow/<%=book1._id%>">
-                    <button class="action_btn">Borrow Book</button>
-                </form>
-
-                <form class="buy_form" method="GET" action="/books">
-                    <button class="buy_btn">Buy Book</button>
-                </form>
-
+            </div>
             <% } %>
-
-        </div>
-
     </div>
-
-</div>
-
-
-
-<div class="review_new">
-    <h3>Leave a Review:</h3>
-    <form action="/books/<%=book1._id%>/reviews" method="POST">
-        <label for="comment">Comments :</label>
-        <br><br>
-        <textarea cols="25" rows="5"
-            id="comment"
-            name="review[comment]"
-            placeholder="Leave your comment"></textarea>
-        <br><br>
-        <label for="rating">Rating :</label>
-        <input type="number"
-            name="review[rating]"
-            min="0"
-            max="5"/>
-        <br><br>
-        <button class="review_btn">Submit</button>
-
-    </form>
-</div>
-
-<hr>
-
-<h2 style="margin-left: 80px;">All Reviews:</h2>
-
-<div class="comments">
-    <% for(let review of book1.reviews) { %>
-
-        <div class="comment_card">
-            <p><%= review.author.username %></p>
-            <p>Rating: <%= review.rating %></p>
-            <p>Comment: <%= review.comment %></p>
-            <form method="POST"
-                action="/books/<%=book1._id%>/reviews/<%=review._id%>?_method=DELETE">
-                <button class="review_del_btn">Delete</button>
-            </form>
-        </div>
-    <% } %>
-</div>
